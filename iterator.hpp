@@ -56,15 +56,15 @@ struct iterator_traits<const T*>
 };
 
 template <class T>
-class random_access_iterator : public ft::iterator<random_access_iterator_tag, T>
+class random_access_iterator
 {
 public:
 	typedef typename iterator<random_access_iterator_tag, T>::value_type		value_type;
 	typedef typename iterator<random_access_iterator_tag, T>::difference_type	difference_type;
 	typedef typename iterator<random_access_iterator_tag, T>::reference			reference;
-	typedef typename iterator<random_access_iterator_tag, T>::iterator_category	iterator_category;
+	typedef typename iterator<std::random_access_iterator_tag, T>::iterator_category	iterator_category; //TODO: костыль для теста
 	typedef typename iterator<random_access_iterator_tag, T>::pointer			pointer;
-	typedef	pointer											iterator_type;
+	typedef	pointer											iterator_type; // TODO: костыль для теста
 
 	random_access_iterator() : _ptr(NULL) { }
 	random_access_iterator(pointer copy) : _ptr(copy) { }

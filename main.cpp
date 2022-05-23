@@ -487,6 +487,13 @@ int main()
 		std::cout << (res == res2) << std::endl;
 	}
 
+	// {
+	// 	ft::vector<int> i;
+	// 	ft::vector<int>::iterator it = i.begin();
+	// 	ft::vector<int>::const_iterator cit = i.begin();
+	// 	cit = it;
+	// }
+
 	// }
 	return 0;
 }

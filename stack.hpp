@@ -6,14 +6,14 @@
 /*   By: aseptimu <aseptimu@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 16:39:10 by aseptimu          #+#    #+#             */
-/*   Updated: 2022/05/22 18:41:50 by aseptimu         ###   ########.fr       */
+/*   Updated: 2022/05/24 12:02:05 by aseptimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef STACK_HPP
 # define STACK_HPP
 
-# include "vector.hpp" //удалить, взять свой.
+# include "vector.hpp"
 
 namespace ft
 {
@@ -30,7 +30,7 @@ protected:
 public:
 	explicit stack () : c() {}
 	explicit stack(const Container& __c) : c(__c) {}
-	// ~stack() {} // не нужно?
+	~stack() {}
 
 	bool				empty() const { return c.empty(); }
 	size_type			size() const { return c.size(); }

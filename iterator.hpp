@@ -64,7 +64,7 @@ public:
 	typedef typename iterator<random_access_iterator_tag, T>::reference			reference;
 	typedef typename iterator<std::random_access_iterator_tag, T>::iterator_category	iterator_category; //TODO: костыль для теста
 	typedef typename iterator<random_access_iterator_tag, T>::pointer			pointer;
-	typedef	pointer											iterator_type; // TODO: костыль для теста
+	typedef	T*																	iterator_type; // TODO: костыль для теста
 
 	random_access_iterator() : _ptr(NULL) { }
 	random_access_iterator(pointer copy) : _ptr(copy) { }

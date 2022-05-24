@@ -487,12 +487,37 @@ int main()
 		std::cout << (res == res2) << std::endl;
 	}
 
-	// {
-	// 	ft::vector<int> i;
-	// 	ft::vector<int>::iterator it = i.begin();
-	// 	ft::vector<int>::const_iterator cit = i.begin();
-	// 	cit = it;
-	// }
+	{
+		std::vector<int> i;
+		std::vector<int>::iterator it = i.begin(); // TODO!!!
+		std::vector<int>::const_iterator cit = i.begin();
+		cit = it;
+	}
+
+	{
+	ft::stack<int> stk;
+	std::vector<int> v;
+	ft::vector<int> deque;
+	for (int i = 0; i < 100 * 10000; ++i)
+		deque.push_back(i);
+	for (int i = 100 * 10000; i < 200 * 10000; ++i)
+		stk.push(i);
+	// g_start2 = timer();
+	ft::stack<int> stack(deque);
+	ft::stack<int> stack2(stk);
+	ft::stack<int> stack3;
+	stack3 = stack2;
+	// g_end2 = timer();
+	while (stack.size() > 0) {
+		v.push_back(stack.top());
+		stack.pop();
+	}
+	while (stack2.size() > 0) {
+		v.push_back(stack2.top());
+		stack2.pop();
+	}
+	// return v;
+	}
 
 	// }
 	return 0;

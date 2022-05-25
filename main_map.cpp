@@ -6,6 +6,7 @@
 #include <stack>
 #include <vector>
 #include <map>
+#include <set>
 
 using namespace std;
 
@@ -63,5 +64,7 @@ int main(void)
 
 	{
 		cout << endl;
+		std::map<int, string> i;
+		
 	}
 }

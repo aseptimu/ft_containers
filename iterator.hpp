@@ -320,5 +320,16 @@ private:
 		return do_distance(first, last, typename ft::iterator_traits<InputIterator>::iterator_category());
 	}
 
+template <class _Tp, class _NodePtr, class _DiffType>
+class tree_iterator
+{
+public:
+	typedef bidirectional_iterator_tag	iterator_category;
+	typedef _Tp							value_type;
+	typedef _DiffType					difference_type;
+	typedef value_type&					reference;
+};
+
+
 }
 #endif

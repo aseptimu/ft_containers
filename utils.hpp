@@ -29,6 +29,8 @@ typedef integral_constant<bool,false> false_type;
 template <class T>	struct _is_integrall							: public false_type {};
 template <>			struct _is_integrall<bool>						: public true_type {};
 template <>			struct _is_integrall<char>						: public true_type {};
+template <>			struct _is_integrall<char16_t>					: public true_type {}; //TODO: не 98й стандарт, но тестер тестит
+template <>			struct _is_integrall<char32_t>					: public true_type {}; //TODO: не 98й стандарт, но тестер тестит
 template <>			struct _is_integrall<wchar_t>					: public true_type {};
 template <>			struct _is_integrall<signed char>				: public true_type {};
 template <>			struct _is_integrall<short int>					: public true_type {};

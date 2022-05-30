@@ -1,36 +1,25 @@
 #ifndef TREE_HPP
 # define TREE_HPP
 
-#include <map>
+# include "iterator.hpp"
+#include <map> // TOOD: delete
+// https://programmersought.com/article/57362384120/
+//https://programmersought.com/article/11974230627/
 
 namespace ft
 {
 
 enum _tree_color { _red_n = false, _black_n = true };
 
-template <class Val>
-struct Node {
-	typedef Node* 		_Node_ptr;
-	typedef const Node* _Const_Node_ptr;
-	typedef Val			value_type;
+struct NodeBase {
+	typedef NodeBase*		_Node_ptr;
+	typedef const NodeBase*	_Const_Node_ptr;
 
-	_tree_color			_is_black;
+
+	_tree_color			_color;
 	_Node_ptr			_parent;
 	_Node_ptr			_left;
 	_Node_ptr			_right;
-	value_type			_value;
-	size_t				_node_count; // Возможно стоит перенести в дерево
-
-Node() // может стоит добавить конструктор с инициализацией полей?
-{
-	_is_black = _red_n;
-	_parent = 0;
-	_left = 0;
-	_right = 0;
-	_node_count = 0;
-}
-
-//возможно добавить метод или конструктор копирования
 
 static _Node_ptr	_Node_min(_Node_ptr _n) throw()
 {
@@ -58,56 +47,122 @@ static _Const_Node_ptr	_Node_max(_Const_Node_ptr _n) throw()
 	while (_n->_right != 0)
 		_n = _n->_right;
 	return (_n);
-} //TODO: нужно ли?
-
-
-
+}
 
 };
 
+struct NodeHeader
+{
+	NodeBase	_header;
+	size_t		_nodeCount;
+
+	NodeHeader()
+	{
+		_header._color = _red_n;
+		_reset();
+	}
+
+	void	_move_data(NodeHeader& copy)
+	{
+		_header._color = copy._header._color;
+		_header._parent = copy._header._parent;
+		_header._left = copy._header._left;
+		_header._right = copy._header._right;
+		_header._parent->_parent = &_header;
+		_nodeCount = copy._nodeCount;
+	}
+
+	void	_reset()
+	{
+		_header._parent = 0;
+		_header._left = &_header;
+		_header._right = &_header;
+		_nodeCount = 0;
+	}
+};
+
+
+template < typename _Val >
+struct Node : public NodeBase
+{
+	typedef Node*	_link;
+	_Val	_value;
+};
+
+struct TreeBaseIterator
+{
+	typedef NodeBase::_Node_ptr			_Node_ptr;
+	typedef bidirectional_iterator_tag	iterator_category;
+	typedef ptrdiff_t					difference_type;
+
+	_Node_ptr _node;
+
+	void	increment()
+	{
+		if (_node->_right != 0)
+		{
+			_node = _node->_right;
+			while (_node->_left)
+				_node = _node->_left;
+		}
+		else
+		{
+			_Node_ptr	tmp = _node->_parent;
+			while (tmp->_right == _node)
+			{
+				_node = tmp;
+				tmp = _node->_parent;
+			}
+			if (_node->_right != tmp)
+				_node = tmp;
+		}
+	}
+
+	void	decrement()
+	{
+		if (_node->_color == _red_n && 
+			_node->_parent->_parent == _node)
+			_node = _node->_right;
+		else if (_node->_left != 0)
+		{
+			_node = _node->_left;
+			while (_node->_right != 0)
+				_node = _node->_right;
+		}
+		else
+		{
+			_Node_ptr	tmp = _node->_parent;
+			while (_node == tmp->_left)
+			{
+				_node = tmp;
+				tmp = tmp->_parent;
+			}
+			_node = tmp;
+		}
+	}
+};
+
 template < class T >
-struct TreeIterator
+struct TreeIterator : public TreeBaseIterator
 {
 	typedef T							value_type;
 	typedef T&							reference;
 	typedef T*							pointer;
+	typedef Node<T>*					_link;
 
-	typedef bidirectional_iterator_tag	iterator_category;
-	typedef ptrdiff_t					difference_type;
-
-	typedef typename Node<T>::_Node_ptr	Node_ptr;
 	typedef TreeIterator<T>				iterator;
 
-	TreeIterator() : _node() {}
-	explicit TreeIterator(Node_ptr node) : _node(node) {}
+	TreeIterator() { _node = NULL; }
+	explicit TreeIterator(_Node_ptr node) { _node = node; }
 
 	reference	operator*() const 
-	{ return _node->_value;  }
+	{ return static_cast<_link>(_node)->_value;  }
 
 	pointer	operator->() const
-	{ return &_node->_value; }
+	{ return &(operator*()); }
 
-	iterator& operator++()// предусмотреть отсутствие родителя и правого/левого поддерева
-	{
-		if (_node->right != 0)
-		{
-			_node = _node->right;
-			while (_node->left)
-				_node = _node->left;
-		}
-		else
-		{
-			Node_ptr	tmp = _node->parent;
-			while (tmp->right == _node)
-			{
-				_node = tmp;
-				tmp = _node->parent;
-			}
-			if () // TODO: Разобраться! реализуется в зависимости от структуры дерева https://stackoverflow.com/questions/17150544/what-is-the-definition-of-rb-tree-increment-in-bits-stl-tree-h
-		}
-		return (*this);
-	} // https://programmersought.com/article/57362384120/
-//https://programmersought.com/article/11974230627/
+	iterator& operator++()
+	{ increment(); return (*this); }
 	iterator operator++(int)
 	{
 		iterator	tmp = *this;
@@ -115,10 +170,72 @@ struct TreeIterator
 		return (tmp);
 	}
 
-	Node_ptr	_node;
+	iterator& operator--()
+	{ decrement(); return (*this); }
+	iterator operator--(int)
+	{
+		iterator	tmp = *this;
+		--_node;
+		return (tmp);
+	}
+	friend bool operator==(const TreeIterator<T>& left, const TreeIterator<T>& right)
+	{
+		return left._node == right._node;
+	}
+	friend bool	operator!=(const TreeIterator<T>& left, const TreeIterator<T>& right)
+	{
+		return left._node != right._node;
+	}
+
 };
 
+template < class T >
+struct TreeConstIterator : public TreeBaseIterator //TODO:Проверить!
+{
+	typedef T							value_type;
+	typedef const T&					reference;
+	typedef const T*					pointer;
+	typedef const Node<T>*				_link;
 
+	typedef TreeIterator<T>				iterator;
+
+	TreeConstIterator() {_node = NULL; }
+	explicit TreeConstIterator(_Node_ptr node) { _node = node; }
+	TreeConstIterator(const iterator& it) { _node = it._node; }
+
+	reference	operator*() const 
+	{ return static_cast<_link>(_node)->_value;  }
+
+	pointer	operator->() const
+	{ return &(operator*()); }
+
+	iterator& operator++()
+	{ increment(); return (*this); }
+	iterator operator++(int)
+	{
+		iterator	tmp = *this;
+		++_node;
+		return (tmp);
+	}
+
+	iterator& operator--()
+	{ decrement(); return (*this); }
+	iterator operator--(int)
+	{
+		iterator	tmp = *this;
+		--_node;
+		return (tmp);
+	}
+	friend bool operator==(const TreeConstIterator<T>& left, const TreeConstIterator<T>& right)
+	{
+		return left._node == right._node;
+	}
+	
+	friend bool operator!=(const TreeConstIterator<T>& left, const TreeConstIterator<T>& right)
+	{
+		return left._node != right._node;
+	}
+};
 
 template < class T, class Comp = std::less<T>, class Alloc = std::allocator<T> >
 class Tree

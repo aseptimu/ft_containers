@@ -46,11 +46,12 @@ int main(void)
 	l._nodeCount = 100;
 	// cout << l._header._color;
 	ft::TreeBaseIterator o;
-	ft::Node<int> *n1 = ft::Tree<int>::_node_allocator().allocate(1);
-	ft::Node<int> *n2 = ft::Tree<int>::_node_allocator().allocate(1);
-	ft::Node<int> *n3 = ft::Tree<int>::_node_allocator().allocate(1);;
-	ft::Node<int> *n4 = ft::Tree<int>::_node_allocator().allocate(1);;
-	ft::Node<int> *n5 = ft::Tree<int>::_node_allocator().allocate(1);;
+	ft::Node<int> *n1 = ft::Tree<int, int, std::less<int> >::_node_allocator().allocate(1);
+	ft::Node<int> *n2 = ft::Tree<int, int, std::less<int> >::_node_allocator().allocate(1);
+	ft::Node<int> *n3 = ft::Tree<int, int, std::less<int> >::_node_allocator().allocate(1);
+	ft::Node<int> *n4 = ft::Tree<int, int, std::less<int> >::_node_allocator().allocate(1);
+	ft::Node<int> *n5 = ft::Tree<int, int, std::less<int> >::_node_allocator().allocate(1);
+	ft::Node<int> *n6 = ft::Tree<int, int, std::less<int> >::_node_allocator().allocate(1);
 	n2->_left = n1;
 	n2->_right = n3;
 	n3->_left = n4;

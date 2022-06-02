@@ -2,9 +2,12 @@
 # define TREE_HPP
 
 # include "iterator.hpp"
+# include "utils.hpp"
 #include <map> // TOOD: delete
 // https://programmersought.com/article/57362384120/
 //https://programmersought.com/article/11974230627/
+
+// _M_insert_range_equal и _M_insert_range_unique не нужны!
 
 namespace ft
 {
@@ -261,7 +264,7 @@ public:
 
 
 	typedef typename allocator_type::template rebind<Node<Val> >::other	_node_allocator; // TODO: перенести в private?
-	typedef std::allocator_traits<_node_allocator>	_alloc_traits; // c++11!!!
+	typedef std::allocator_traits<_node_allocator>	_alloc_traits; // TODO: c++11!!!
 
 private: // TODO: or protected?
 // 	Node
@@ -282,7 +285,7 @@ public: // TODO: delete!!!
 	allocator_type	get_allocator() const { return allocator_type(_get_node_allocator()); }
 	_link	_get_node() { return _node_allocator().allocate(1); } // allocate node
 	void	_put_node(_link _p) { _node_allocator().deallocate(_p, 1); } // deallocate node
-	void	_construct_node(_link node, const value_type& val) // construct node. Try/catch!
+	void	_construct_node(_link node, const value_type& val) // construct node.
 	{
 		try
 		{
@@ -344,10 +347,10 @@ public: // TODO: delete!!!
 	static _const_link	_node_left(_const_base_ptr node) { return static_cast<_const_link>(node->_left); }
 	static _link	_node_right(_base_ptr node) { return static_cast<_link>(node->_right); }
 	static _const_link	_node_right(_const_base_ptr node) { return static_cast<_const_link>(node->_right); }
-	static _base_ptr	_min_node(_base_ptr node) { return NodeBase::_Node_min(node); }
-	static _const_base_ptr	_min_node(_const_base_ptr node) { return NodeBase::_Node_min(node); }
-	static _base_ptr	_max_node(_base_ptr node) { return NodeBase::_Node_max(node); }
-	static _const_base_ptr	_max_node(_const_base_ptr node) { return NodeBase::_Node_max(node); }
+	static _base_ptr	_min_subtree_node(_base_ptr node) { return NodeBase::_Node_min(node); }
+	static _const_base_ptr	_min_subtree_node(_const_base_ptr node) { return NodeBase::_Node_min(node); }
+	static _base_ptr	_max_subtree_node(_base_ptr node) { return NodeBase::_Node_max(node); }
+	static _const_base_ptr	_max_subtree_node(_const_base_ptr node) { return NodeBase::_Node_max(node); }
 
 	// Iterator typedef
 	typedef TreeIterator<value_type>								iterator;
@@ -356,7 +359,26 @@ public: // TODO: delete!!!
 	typedef typename ft::reverse_iterator<const_iterator>			const_reverse_iterator;
 
 	// Prototypes and methods
+/*
+	ft::pair<_base_ptr, _base_ptr>
+	get_insert_uniq_pos(const key_type& key); ???
 
+	ft::pair<_base_ptr, _base_ptr>
+	get_insert_equal_pos(const key_type& key); ???
+
+	ft::pair<_base_ptr, _base_ptr>
+	get_insert_hint_uniq_pos(const_iterator pos, const key_type& key);
+
+	ft::pair<_base_ptr, _base_ptr>
+	get_insert_hint_equal_pos(const_iterator pos, const key_type& key);
+
+
+private:
+	template < typename NodeGen >
+	iterator	_insert(_base_ptr, _base_-tr, const value_type&, NodeGen&); ?? дать названия переменным
+	iterator	_insert_lower(_base_ptr, const value_type&); ?? дать названия переменным
+	iterator	_insert_equal_lower(const value_type&) ?? дать названия переменным
+*/
 	template < typename NodeGen >
 	_link	_copy_tree(_link copy, _base_ptr parent, NodeGen& node_generator); // Deep copy (every node must be copied)
 
@@ -364,8 +386,8 @@ public: // TODO: delete!!!
 	_link	_copy_tree(Tree& tree, NodeGen& node_generator)
 	{
 		_link	root = _copy_tree(tree._tree_begin(), tree._tree_end(), node_generator);
-		_min_node() = NodeBase::_Node_min(root);
-		_max_node() = NodeBase::_Node_max(root);
+		_get_min_node() = _min_subtree_node(root);
+		_get_max_node() = _max_subtree_node(root);
 		_impl._nodeCount = tree._impl._nodeCount;
 		return (root);
 	}
@@ -376,6 +398,13 @@ public: // TODO: delete!!!
 		return _copy_tree(tree, an);
 	}
 
+	void	_erase(_link node); // pure erase without rebalancing
+	iterator	_lower_bound(_link begin, _base_ptr end, const key_type& key);
+	const_iterator	_lower_bound(_const_link begin, _const_base_ptr end, const key_type& key) const;
+	iterator	_upper_bound(_link begin, _base_ptr end, const key_type& key);
+	const_iterator	_upper_bound(_const_link begin, _const_base_ptr end, const key_type& key) const;
+
+
 	// allocation/deallocation
 	Tree() { }
 	Tree(const Comp& comp, const allocator_type& a = allocator_type()) : _impl(comp, _node_allocator(a)) { }
@@ -384,7 +413,7 @@ public: // TODO: delete!!!
 		if (tree._get_root() != 0)
 			_get_root() = _copy_tree(tree);
 	}
-	// ~Tree() { erase(_tree_begin()) } TODO: erase!
+	~Tree() { _erase(_tree_begin()); }
 	Tree& operator=(const Tree& assign);
 
 	// Accessors
@@ -403,6 +432,55 @@ public: // TODO: delete!!!
 	void	swap(Tree& tree); //TODO: сделать
 
 	// Insert/erase
+/*
+	ft::pair<iterator, bool>	_insert_unique(const value_type&)
+	iterator	_insert_equal(const value_type&)
+	template < typename NodeGen >
+	iterator	_insert_unique(const_iterator, const value_type&, NodeGen&)
+	iterator	_insert_unique(const_iterator, const value_type&)
+	{
+		Alloc_node	an(*this);
+		return _insert_unique()
+	}
+	template < typename NodeGen >
+	iterator	_insert_equal(const_iterator, const value_type&, NodeGen&)
+	iterator	_insert_equal(const_iterator, const value_type&)
+	{
+		Alloc_node an(*this);
+		return _insert_equal()
+	}
+*/
+/*
+private:
+	void	_erase_aux(const_iterator);
+	void	_erase_aux(const_iterator, const_iterator);
+public:
+	void	erase(iterator	pos);
+	{
+		if (pos != end()) // TODO: проверить!
+			_erase_aux(pos);
+	}
+	size_type	erase(const key_type& key);
+	void	erase(iterator first, iterator last) { _erase_aux(first, last); }
+	void	erase(const_iterator first, const_iterator last) { _erase_aux(first, last); }
+	void	clear()
+	{
+		_erase(_tree_begin());
+		_impl._reset();
+	}
+*/
+
+// Operations
+	iterator	find(const key_type& key);
+	const_iterator	find(const key_type& key) const;
+	size_type	count(const key_type& key) const;
+	iterator	lower_bound(const key_type& key) { return _lower_bound(_tree_begin(), _tree_end(), key); }
+	const_iterator	lower_bound(const key_type& key) const { return _lower_bound(_tree_begin(), _tree_end(), key); }
+	iterator	upper_bound(const key_type& key) { return _upper_bound(_tree_begin(), _tree_end(), key); }
+	const_iterator	upper_bound(const key_type& key) const { return _upper_bound(_tree_begin(), _tree_end(), key); }
+	ft::pair<iterator, iterator>	equal_range(const key_type& key);
+	ft::pair<const_iterator, const_iterator>	equal_range(const key_type& key) const;
+
 
 	// Operators
 	friend bool	operator==(const Tree& lhs, const Tree& rhs)
@@ -421,6 +499,136 @@ public: // TODO: delete!!!
 // template < typename NodeGen >
 // typename Tree<Key, Val, KeyOfValue, Comp, Alloc>::_link	Tree<Key, Val, KeyOfValue, Comp, Alloc>::
 
+template < typename Key, typename Val, typename KeyOfValue, typename Comp, typename Alloc >
+Tree<Key, Val, KeyOfValue, Comp, Alloc>& Tree<Key, Val, KeyOfValue, Comp, Alloc>::operator=(const Tree& assign) // TODO: првоерить!
+{
+	if (this != &assign)
+	{
+		Alloc_node an(*this); //TODO: обсобенно это проверить!
+		_impl._reset(); //TODO: проверить утечки!
+		_impl._key_compare = assign._impl._key_compare;
+		if (assign._get_root() != 0)
+			_get_root() = _copy_tree(assign, an); // TODO: Ещё раз! УТЕЧКИ!
+	}
+	return (*this);
+}
+
+// template < typename Key, typename Val, typename KeyOfValue, typename Comp, typename Alloc >
+// _insert... //и другие insert методы
+
+
+
+template < typename Key, typename Val, typename KeyOfValue, typename Comp, typename Alloc >
+template < typename NodeGen >
+typename Tree<Key, Val, KeyOfValue, Comp, Alloc>::_link	Tree<Key, Val, KeyOfValue, Comp, Alloc>::_copy_tree(_link copy, _base_ptr parent, NodeGen& gen) // TODO: проверить!!
+{
+	_link	top = _clone_node(copy, gen);
+
+	top->_parent = parent;
+	try
+	{
+		if (copy->_right)
+			top->_right = _copy_tree(_node_right(copy), top, gen);
+		parent = top;
+		copy = copy->_left;
+		while (copy != 0)
+		{
+			_link tmp = _clone_node(copy, gen);
+			parent->_left = tmp;
+			tmp->_parent = parent;
+			if (copy->_right)
+				tmp->_right = _copy_tree(_node_right(copy), tmp, gen);
+			parent = tmp;
+			copy = _node_left(copy);
+		}		
+	}
+	catch(...)
+	{
+		_erase(top);
+		throw ;
+	}
+	return (top);
+}
+
+template < typename Key, typename Val, typename KeyOfValue, typename Comp, typename Alloc >
+void	Tree<Key, Val, KeyOfValue, Comp, Alloc>::_erase(_link node) //pure erase without rebalance
+{
+	while (node != 0)
+	{
+		_erase(_node_right(node));
+		_link	tmp = _node_left(node);
+		_drop_node(node);
+		node = tmp;
+	}
+}
+
+template < typename Key, typename Val, typename KeyOfValue, typename Comp, typename Alloc >
+typename Tree<Key, Val, KeyOfValue, Comp, Alloc>::iterator	Tree<Key, Val, KeyOfValue, Comp, Alloc>::_lower_bound(_link begin, _base_ptr end, const key_type& key)
+{
+	while (begin != 0)
+	{
+		if (!_impl._key_compare(_node_key(begin), key))
+		{
+			end = begin;
+			begin = _node_left(begin);
+		}
+		else
+			begin = _node_right(begin); 
+	}
+	return iterator(end);
+}
+
+template < typename Key, typename Val, typename KeyOfValue, typename Comp, typename Alloc >
+typename Tree<Key, Val, KeyOfValue, Comp, Alloc>::const_iterator	Tree<Key, Val, KeyOfValue, Comp, Alloc>::_lower_bound(_const_link begin, _const_base_ptr end, const key_type& key) const
+{
+	while (begin != 0)
+	{
+		if (!_impl._key_compare(_node_key(begin), key))
+		{
+			end = begin;
+			begin = _node_left(begin);
+		}
+		else
+			begin = _node_right(begin); 
+	}
+	return const_iterator(end);
+}
+
+template < typename Key, typename Val, typename KeyOfValue, typename Comp, typename Alloc >
+typename Tree<Key, Val, KeyOfValue, Comp, Alloc>::iterator	Tree<Key, Val, KeyOfValue, Comp, Alloc>::_upper_bound(_link begin, _base_ptr end, const key_type& key)
+{
+	while (begin != 0)
+	{
+		if (_impl._key_compare(key, _node_key(begin)))
+		{
+			end = begin;
+			begin = _node_left(begin);
+		}
+		else
+			begin = _node_right(begin); 
+	}
+	return iterator(end);
+}
+
+template < typename Key, typename Val, typename KeyOfValue, typename Comp, typename Alloc >
+typename Tree<Key, Val, KeyOfValue, Comp, Alloc>::const_iterator	Tree<Key, Val, KeyOfValue, Comp, Alloc>::_upper_bound(_const_link begin, _const_base_ptr end, const key_type& key) const
+{
+	while (begin != 0)
+	{
+		if (_impl._key_compare(key, _node_key(begin)))
+		{
+			end = begin;
+			begin = _node_left(begin);
+		}
+		else
+			begin = _node_right(begin);
+	}
+	return const_iterator(end);
+}
+//equal range x2!!
+// template < typename Key, typename Val, typename KeyOfValue, typename Comp, typename Alloc >
+// Tree<Key, Val, KeyOfValue, Comp, Alloc>::const_iterator	Tree<Key, Val, KeyOfValue, Comp, Alloc>::_upper_bound(_const_link begin, _const_base_ptr end, const key_type& key) const
+// {
 
 }
 

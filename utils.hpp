@@ -113,6 +113,11 @@ bool lexicographical_compare (InputIterator1 first1, InputIterator1 last1,
 	return (first2!=last2);
 }
 
+template <class T> void swap ( T& a, T& b )
+{
+  T c(a); a=b; b=c;
+}
+
 /* pair */
 template <class T1, class T2>
 struct pair
@@ -165,11 +170,7 @@ pair<T1,T2> make_pair (T1 x, T2 y)
 { return pair<T1, T2> (x, y); }
 
 
-// template <class T1, class T2>
-// pair<T1,T2> make_pair (T1 x, T2 y)
-// {
-// 	return ( pair<T1, T2>(x, y) );
-// }
+
 
 } // namespace ft
 

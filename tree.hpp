@@ -8,6 +8,7 @@
 //https://programmersought.com/article/11974230627/
 
 // _M_insert_range_equal и _M_insert_range_unique не нужны!
+// _M_insert_equal* НЕ НУЖНЫ! Для multi set/map!
 
 namespace ft
 {
@@ -363,21 +364,16 @@ public: // TODO: delete!!!
 	ft::pair<_base_ptr, _base_ptr>
 	get_insert_uniq_pos(const key_type& key); ???
 
-	ft::pair<_base_ptr, _base_ptr>
-	get_insert_equal_pos(const key_type& key); ???
 
 	ft::pair<_base_ptr, _base_ptr>
 	get_insert_hint_uniq_pos(const_iterator pos, const key_type& key);
 
-	ft::pair<_base_ptr, _base_ptr>
-	get_insert_hint_equal_pos(const_iterator pos, const key_type& key);
 
 
 private:
 	template < typename NodeGen >
 	iterator	_insert(_base_ptr, _base_-tr, const value_type&, NodeGen&); ?? дать названия переменным
-	iterator	_insert_lower(_base_ptr, const value_type&); ?? дать названия переменным
-	iterator	_insert_equal_lower(const value_type&) ?? дать названия переменным
+	iterator	_insert_lower(_base_ptr, const value_type&); ?? дать названия переменным СКОРЕЕ ВСЕГО НЕ НУЖНО
 */
 	template < typename NodeGen >
 	_link	_copy_tree(_link copy, _base_ptr parent, NodeGen& node_generator); // Deep copy (every node must be copied)
@@ -434,7 +430,7 @@ private:
 	// Insert/erase
 /*
 	ft::pair<iterator, bool>	_insert_unique(const value_type&)
-	iterator	_insert_equal(const value_type&)
+
 	template < typename NodeGen >
 	iterator	_insert_unique(const_iterator, const value_type&, NodeGen&)
 	iterator	_insert_unique(const_iterator, const value_type&)
@@ -442,13 +438,12 @@ private:
 		Alloc_node	an(*this);
 		return _insert_unique()
 	}
-	template < typename NodeGen >
-	iterator	_insert_equal(const_iterator, const value_type&, NodeGen&)
-	iterator	_insert_equal(const_iterator, const value_type&)
+	template < typename InputIterator >
+	void	_insert_range_unique(InputIterator first, InputIterator second)
 	{
-		Alloc_node an(*this);
-		return _insert_equal()
+		for...
 	}
+
 */
 /*
 private:
@@ -625,10 +620,51 @@ typename Tree<Key, Val, KeyOfValue, Comp, Alloc>::const_iterator	Tree<Key, Val, 
 	}
 	return const_iterator(end);
 }
-//equal range x2!!
-// template < typename Key, typename Val, typename KeyOfValue, typename Comp, typename Alloc >
-// Tree<Key, Val, KeyOfValue, Comp, Alloc>::const_iterator	Tree<Key, Val, KeyOfValue, Comp, Alloc>::_upper_bound(_const_link begin, _const_base_ptr end, const key_type& key) const
-// {
+
+template < typename Key, typename Val, typename KeyOfValue, typename Comp, typename Alloc >
+ft::pair<typename Tree<Key, Val, KeyOfValue, Comp, Alloc>::iterator, typename Tree<Key, Val, KeyOfValue, Comp, Alloc>::iterator>
+Tree<Key, Val, KeyOfValue, Comp, Alloc>::equal_range(const key_type& key)
+{
+	return pair<iterator, iterator>(lower_bound(key), upper_bound(key));
+}
+
+template < typename Key, typename Val, typename KeyOfValue, typename Comp, typename Alloc >
+ft::pair<typename Tree<Key, Val, KeyOfValue, Comp, Alloc>::const_iterator, typename Tree<Key, Val, KeyOfValue, Comp, Alloc>::const_iterator>
+Tree<Key, Val, KeyOfValue, Comp, Alloc>::equal_range(const key_type& key) const
+{
+	return pair<iterator, iterator>(lower_bound(key), upper_bound(key));
+}
+
+template < typename Key, typename Val, typename KeyOfValue, typename Comp, typename Alloc >
+void	swap(Tree<Key, Val, KeyOfValue, Comp, Alloc>& a, Tree<Key, Val, KeyOfValue, Comp, Alloc>& b)
+{
+	a.swap(b);
+}
+
+template < typename Key, typename Val, typename KeyOfValue, typename Comp, typename Alloc >
+void	Tree<Key, Val, KeyOfValue, Comp, Alloc>::swap(Tree& tree)
+{
+	if (_get_root() == 0)
+	{
+		if (tree._get_root != 0)
+			_impl._move_data(tree._impl);
+	}
+	else if (tree._get_root() == 0)
+		tree._impl._move_data(_impl);
+	else
+	{
+		ft::swap(_get_root(), tree._get_root());
+		ft::swap(_get_min_node(), tree._get_min_node());
+		ft::swap(_get_max_node(), tree._get_max_node());
+
+		_get_root()->_parent = _tree_end();
+		tree._get_root()->_parent = tree._tree_end();
+		ft::swap(_impl._nodeCount, tree._impl._nodeCount);
+	}
+	ft::swap(_impl._key_compare, tree._impl._key_compare);
+	//TODO: возможно, добавить swap alloc'аторов
+}
+
 
 }
 

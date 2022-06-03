@@ -93,7 +93,7 @@ struct Node : public NodeBase
 	_Val	_value;
 };
 
-struct TreeBaseIterator
+struct TreeBaseIterator //TODO: проверить с const
 {
 	typedef NodeBase::_Node_ptr			_Node_ptr;
 	typedef bidirectional_iterator_tag	iterator_category;

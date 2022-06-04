@@ -7,7 +7,7 @@
 // https://programmersought.com/article/57362384120/
 //https://programmersought.com/article/11974230627/
 
-// _M_insert_range_equal и _M_insert_range_unique не нужны!
+// _M_insert_range_equal не нужны!
 // _M_insert_equal* НЕ НУЖНЫ! Для multi set/map!
 
 namespace ft
@@ -360,21 +360,8 @@ public: // TODO: delete!!!
 	typedef typename ft::reverse_iterator<const_iterator>			const_reverse_iterator;
 
 	// Prototypes and methods
-/*
-	ft::pair<_base_ptr, _base_ptr>
-	get_insert_uniq_pos(const key_type& key); ???
-
-
-	ft::pair<_base_ptr, _base_ptr>
-	get_insert_hint_uniq_pos(const_iterator pos, const key_type& key);
-
-
 
 private:
-	template < typename NodeGen >
-	iterator	_insert(_base_ptr, _base_-tr, const value_type&, NodeGen&); ?? дать названия переменным
-	iterator	_insert_lower(_base_ptr, const value_type&); ?? дать названия переменным СКОРЕЕ ВСЕГО НЕ НУЖНО
-*/
 	template < typename NodeGen >
 	_link	_copy_tree(_link copy, _base_ptr parent, NodeGen& node_generator); // Deep copy (every node must be copied)
 
@@ -400,7 +387,7 @@ private:
 	iterator	_upper_bound(_link begin, _base_ptr end, const key_type& key);
 	const_iterator	_upper_bound(_const_link begin, _const_base_ptr end, const key_type& key) const;
 
-
+public: // TODO: delete
 	// allocation/deallocation
 	Tree() { }
 	Tree(const Comp& comp, const allocator_type& a = allocator_type()) : _impl(comp, _node_allocator(a)) { }
@@ -431,20 +418,30 @@ private:
 /*
 	ft::pair<iterator, bool>	_insert_unique(const value_type&)
 
+*/
+	ft::pair<_base_ptr, _base_ptr>	get_check_position(const key_type& key);
+
+	ft::pair<_base_ptr, _base_ptr>	get_insert_hint_pos(const_iterator pos, const key_type& key);
+
 	template < typename NodeGen >
-	iterator	_insert_unique(const_iterator, const value_type&, NodeGen&)
-	iterator	_insert_unique(const_iterator, const value_type&)
+	iterator	_insert_in_tree(_base_ptr node, _base_ptr parent, const value_type& val, NodeGen& gen);
+
+	template < typename NodeGen >
+	iterator	_insert_(const_iterator it, const value_type& val, NodeGen& gen);
+	iterator	_insert_(const_iterator it, const value_type& val)
 	{
 		Alloc_node	an(*this);
-		return _insert_unique()
+		return _insert_(it, val, an);
 	}
 	template < typename InputIterator >
-	void	_insert_range_unique(InputIterator first, InputIterator second)
+	void	_insert_range(InputIterator first, InputIterator end)
 	{
-		for...
+		Alloc_node	an(*this);
+
+		for(; first != end; ++first)
+			_insert_(end(), *first, an);
 	}
 
-*/
 /*
 private:
 	void	_erase_aux(const_iterator);
@@ -510,8 +507,106 @@ Tree<Key, Val, KeyOfValue, Comp, Alloc>& Tree<Key, Val, KeyOfValue, Comp, Alloc>
 
 // template < typename Key, typename Val, typename KeyOfValue, typename Comp, typename Alloc >
 // _insert... //и другие insert методы
+template < typename Key, typename Val, typename KeyOfValue, typename Comp, typename Alloc >
+ft::pair<typename Tree<Key, Val, KeyOfValue, Comp, Alloc>::_base_ptr, typename Tree<Key, Val, KeyOfValue, Comp, Alloc>::_base_ptr>	
+Tree<Key, Val, KeyOfValue, Comp, Alloc>::get_check_position(const key_type& key)
+{
+	typedef ft::pair<_base_ptr, _base_ptr>	res;
+	_link	node = _tree_begin();
+	_link	prev = _tree_end();
+	bool	compare = true;
+	
+	while(node != 0) // going to leaf
+	{
+		prev = node;
+		compare = _impl._key_compare(key, _node_key(node));
+		node = compare ? _node_left(node) : _node_right(node);
+	}
+	iterator check = prev;
+	if (compare) // if left leaf reached
+	{
+		if (check == begin()) // if the minimum value is insert
+			return res(node, prev);
+		else
+			--check; // go back to check that the value is unique		
+	}
+	if (_impl._key_compare(_node_key(check._node), key)) // if value is unique
+		return res(node, prev);
+	return res(check._node, 0);
+}
+
+template < typename Key, typename Val, typename KeyOfValue, typename Comp, typename Alloc >
+ft::pair<typename Tree<Key, Val, KeyOfValue, Comp, Alloc>::_base_ptr, typename Tree<Key, Val, KeyOfValue, Comp, Alloc>::_base_ptr>	
+Tree<Key, Val, KeyOfValue, Comp, Alloc>::get_insert_hint_pos(const_iterator pos, const key_type& key)
+{
+	typedef	pair<_base_ptr, _base_ptr>	res;
+	iterator	position = iterator(const_cast<_base_ptr>(pos._node));
+
+	if (position._node == _tree_end())
+	{
+		if (size() > 0 && _impl._key_compare(_node_key(_get_max_node()), key))
+			return res(0, _get_max_node());
+		else
+			return get_check_position(key);
+	}
+	else if(_impl._key_compare(key, _node_key(position._node)))
+	{
+		iterator	before = position;
+		if (position._node == _get_min_node())
+			return res(_get_min_node(), _get_min_node());
+		else if (_impl._key_compare(_node_key((--before)._node), key))
+		{
+			if (_node_right(before._node) == 0)
+				return res(0, before._node);
+			else
+				return res(position._node, position._node);
+		}
+			return get_check_position(key);
+	}
+	else if(_impl._key_compare(_node_key(position._node), key))
+	{
+		iterator	after = position;
+		if (position._node == _get_max_node())
+			return res(0, _get_max_node());
+		else if (_impl._key_compare(key, _node_key((++after)._node)))
+		{
+			if (_node_right(position._node) == 0)
+				return res(0, position._node);
+			else
+				return res(after._node, after._node);
+		}
+		else
+			return get_check_position(key);
+	}
+	else
+		return res(position._node, 0);
+}
+
+//
+
+template < typename Key, typename Val, typename KeyOfValue, typename Comp, typename Alloc >
+template < typename NodeGen >
+typename Tree<Key, Val, KeyOfValue, Comp, Alloc>::iterator	Tree<Key, Val, KeyOfValue, Comp, Alloc>::_insert_in_tree(_base_ptr node, _base_ptr parent, const value_type& val, NodeGen& gen)
+{
+	bool	insert_left = (node != 0 || parent == end() || _impl._key_compare(KeyOfValue()(val), _node_key(parent)));
+	_link	n = _create_node(val);
+
+	tree_insert_and_rebalance(insert_left, n, parent, _impl._header);
+	++_impl._nodeCount;
+	return iterator(n);
+}
 
 
+template < typename Key, typename Val, typename KeyOfValue, typename Comp, typename Alloc >
+template < typename NodeGen >
+typename Tree<Key, Val, KeyOfValue, Comp, Alloc>::iterator	Tree<Key, Val, KeyOfValue, Comp, Alloc>::_insert_(const_iterator it, const value_type& val, NodeGen& gen)
+{
+	ft::pair<_base_ptr, _base_ptr> res = get_insert_hint_pos(it, KeyOfValue()(val));
+
+	if (res.second)
+		return (_insert_in_tree(res.first, res.second, val, gen));
+	return iterator(res.first);
+}
 
 template < typename Key, typename Val, typename KeyOfValue, typename Comp, typename Alloc >
 template < typename NodeGen >

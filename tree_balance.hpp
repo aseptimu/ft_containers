@@ -39,6 +39,13 @@ namespace ft
 		tmp->_right = node;
 		node->_parent = tmp;
 	}
+
+	void	tree_insert_and_rebalance(const bool insert_left, NodeBase* node, NodeBase* parent, NodeBase* header)
+	{
+		NodeBase *& root = header->_parent;
+
+		
+	}
 } // namespace ft
 
 #endif

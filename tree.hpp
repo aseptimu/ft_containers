@@ -445,10 +445,9 @@ public: // TODO: what???
 			_erase_aux(pos);
 	}
 	size_type	erase(const key_type& key);
-/*
 	void	erase(iterator first, iterator last) { _erase_aux(first, last); }
 	void	erase(const_iterator first, const_iterator last) { _erase_aux(first, last); }
-*/
+
 	void	clear()
 	{
 		_erase(_tree_begin());
@@ -644,8 +643,6 @@ Tree<Key, Val, KeyOfValue, Comp, Alloc>::size_type	Tree<Key, Val, KeyOfValue, Co
 	_erase_aux(del.first, del.second);
 	return (old_size - size());
 }
-
-
 
 template < typename Key, typename Val, typename KeyOfValue, typename Comp, typename Alloc >
 template < typename NodeGen >

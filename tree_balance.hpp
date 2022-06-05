@@ -5,9 +5,10 @@
 
 namespace ft
 {
-	static void	tree_rotate_left(NodeBase* const node, NodeBase*& root)
+	template < typename Val >
+	static void	tree_rotate_left(Node<Val>* const node, Node<Val>*& root)
 	{
-		NodeBase* const tmp = node->_right;
+		Node<Val>* const tmp = node->_right;
 
 		node->_right = tmp->_left;
 		if (tmp->_left != 0)
@@ -23,9 +24,10 @@ namespace ft
 		node->_parent = tmp;
 	}
 
-	static void	tree_rotate_right(NodeBase* const node, NodeBase*& root)
+	template < typename Val >
+	static void	tree_rotate_right(Node<Val>* const node, Node<Val>*& root)
 	{
-		NodeBase* const tmp = node->_left;
+		Node<Val>* const tmp = node->_left;
 
 		node->_left = tmp->_right;
 		if (tmp->_right != 0)
@@ -40,9 +42,10 @@ namespace ft
 		node->_parent = tmp;
 	}
 
-	void	tree_insert_and_rebalance(const bool insert_left, NodeBase* node, NodeBase* parent, NodeBase& header)
+	template < typename Val >
+	void	tree_insert_and_rebalance(const bool insert_left, Node<Val>* node, Node<Val>* parent, Node<Val>& header)
 	{
-		NodeBase *& root = header._parent;
+		Node<Val> *& root = header._parent;
 
 		// Fields initialization in new node
 		node->_parent = parent;
@@ -72,11 +75,11 @@ namespace ft
 		}
 		while (node != root && node->_parent->_color == _red_n)
 		{
-			NodeBase* const	_grand = node->_parent->_parent;
+			Node<Val>* const	_grand = node->_parent->_parent;
 
 			if (node->_parent == _grand->_left)
 			{
-				NodeBase* const _uncle = _grand->_right;
+				Node<Val>* const _uncle = _grand->_right;
 				if (_uncle && _uncle->_color == _red_n)
 				{
 					node->_parent->_color = _black_n;
@@ -98,7 +101,7 @@ namespace ft
 			}
 			else
 			{
-				NodeBase* const _uncle = _grand->_left;
+				Node<Val>* const _uncle = _grand->_left;
 				if (_uncle && _uncle->_color == _red_n)
 				{
 					node->_parent->_color = _black_n;

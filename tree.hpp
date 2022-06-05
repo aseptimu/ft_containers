@@ -404,10 +404,9 @@ public: // TODO: delete
 	void	swap(Tree& tree); //TODO: сделать
 
 	// Insert/erase
-/*
-	ft::pair<iterator, bool>	_insert_unique(const value_type&)
 
-*/
+	ft::pair<iterator, bool>	_insert_unique(const value_type& val);
+
 	ft::pair<_link, _link>	get_check_position(const key_type& key);
 
 	ft::pair<_link, _link>	get_insert_hint_pos(const_iterator pos, const key_type& key);
@@ -591,6 +590,20 @@ typename Tree<Key, Val, KeyOfValue, Comp, Alloc>::iterator	Tree<Key, Val, KeyOfV
 	if (res.second)
 		return (_insert_in_tree(res.first, res.second, val, gen));
 	return iterator(res.first);
+}
+
+template < typename Key, typename Val, typename KeyOfValue, typename Comp, typename Alloc >
+ft::pair<typename Tree<Key, Val, KeyOfValue, Comp, Alloc>::iterator, bool>	Tree<Key, Val, KeyOfValue, Comp, Alloc>::_insert_unique(const value_type& val)
+{
+	typedef	pair<iterator, bool>	Res;
+	pair<_link, _link> 	res = get_check_position(KeyOfValue()(val));
+
+	if (res.second)
+	{
+		Alloc_node	an(*this);
+		return Res(_insert_in_tree(res.first, res.second, v, an), true);
+	}
+	return Res(iterator(res.first), false);
 }
 
 template < typename Key, typename Val, typename KeyOfValue, typename Comp, typename Alloc >

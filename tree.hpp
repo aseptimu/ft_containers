@@ -430,25 +430,30 @@ public: // TODO: delete
 			_insert_(end(), *first, an);
 	}
 
-/*
-private:
-	void	_erase_aux(const_iterator);
-	void	_erase_aux(const_iterator, const_iterator);
-public:
-	void	erase(iterator	pos);
+// private:
+	void	_erase_aux(const_iterator pos);
+	void	_erase_aux(const_iterator first, const_iterator last);
+public: // TODO: what???
+	void	erase(iterator	pos)
+	{
+		if (pos != end()) // TODO: проверить!
+			_erase_aux(pos);
+	}
+	void	erase(const_iterator	pos)
 	{
 		if (pos != end()) // TODO: проверить!
 			_erase_aux(pos);
 	}
 	size_type	erase(const key_type& key);
+/*
 	void	erase(iterator first, iterator last) { _erase_aux(first, last); }
 	void	erase(const_iterator first, const_iterator last) { _erase_aux(first, last); }
+*/
 	void	clear()
 	{
 		_erase(_tree_begin());
 		_impl._reset();
 	}
-*/
 
 // Operations
 	iterator	find(const key_type& key);
@@ -488,6 +493,8 @@ Tree<Key, Val, KeyOfValue, Comp, Alloc>& Tree<Key, Val, KeyOfValue, Comp, Alloc>
 	}
 	return (*this);
 }
+
+// Insert
 
 template < typename Key, typename Val, typename KeyOfValue, typename Comp, typename Alloc >
 ft::pair<typename Tree<Key, Val, KeyOfValue, Comp, Alloc>::_link, typename Tree<Key, Val, KeyOfValue, Comp, Alloc>::_link>	
@@ -580,7 +587,6 @@ typename Tree<Key, Val, KeyOfValue, Comp, Alloc>::iterator	Tree<Key, Val, KeyOfV
 	return iterator(n);
 }
 
-
 template < typename Key, typename Val, typename KeyOfValue, typename Comp, typename Alloc >
 template < typename NodeGen >
 typename Tree<Key, Val, KeyOfValue, Comp, Alloc>::iterator	Tree<Key, Val, KeyOfValue, Comp, Alloc>::_insert_(const_iterator it, const value_type& val, NodeGen& gen)
@@ -601,10 +607,45 @@ ft::pair<typename Tree<Key, Val, KeyOfValue, Comp, Alloc>::iterator, bool>	Tree<
 	if (res.second)
 	{
 		Alloc_node	an(*this);
-		return Res(_insert_in_tree(res.first, res.second, v, an), true);
+		return Res(_insert_in_tree(res.first, res.second, val, an), true);
 	}
 	return Res(iterator(res.first), false);
 }
+
+// Erase
+
+template < typename Key, typename Val, typename KeyOfValue, typename Comp, typename Alloc >
+void	Tree<Key, Val, KeyOfValue, Comp, Alloc>::_erase_aux(const_iterator pos)
+{
+	_link	del = tree_rebalance_for_erase(pos._node, _impl._header);
+
+	_drop_node(del);
+	--_impl._nodeCount;
+}
+
+template < typename Key, typename Val, typename KeyOfValue, typename Comp, typename Alloc >
+void	Tree<Key, Val, KeyOfValue, Comp, Alloc>::_erase_aux(const_iterator first, const_iterator last)
+{
+	if (first == begin() && last == end())
+		clear();
+	else
+	{
+		while (first != last)
+			_erase_aux(first++);
+	}
+}
+
+template < typename Key, typename Val, typename KeyOfValue, typename Comp, typename Alloc >
+Tree<Key, Val, KeyOfValue, Comp, Alloc>::size_type	Tree<Key, Val, KeyOfValue, Comp, Alloc>::erase(const key_type& key)
+{
+	pair<iterator, iterator> del = equal_range(key);
+	const size_type	old_size = size();
+
+	_erase_aux(del.first, del.second);
+	return (old_size - size());
+}
+
+
 
 template < typename Key, typename Val, typename KeyOfValue, typename Comp, typename Alloc >
 template < typename NodeGen >

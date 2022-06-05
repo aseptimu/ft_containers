@@ -703,14 +703,14 @@ typename Tree<Key, Val, KeyOfValue, Comp, Alloc>::const_iterator	Tree<Key, Val, 
 
 template < typename Key, typename Val, typename KeyOfValue, typename Comp, typename Alloc >
 ft::pair<typename Tree<Key, Val, KeyOfValue, Comp, Alloc>::iterator, typename Tree<Key, Val, KeyOfValue, Comp, Alloc>::iterator>
-Tree<Key, Val, KeyOfValue, Comp, Alloc>::equal_range(const key_type& key)
+Tree<Key, Val, KeyOfValue, Comp, Alloc>::equal_range(const key_type& key) // TODO: проверить!!!
 {
 	return pair<iterator, iterator>(lower_bound(key), upper_bound(key));
 }
 
 template < typename Key, typename Val, typename KeyOfValue, typename Comp, typename Alloc >
 ft::pair<typename Tree<Key, Val, KeyOfValue, Comp, Alloc>::const_iterator, typename Tree<Key, Val, KeyOfValue, Comp, Alloc>::const_iterator>
-Tree<Key, Val, KeyOfValue, Comp, Alloc>::equal_range(const key_type& key) const
+Tree<Key, Val, KeyOfValue, Comp, Alloc>::equal_range(const key_type& key) const //TODO: ЭТО ТОЖЕ ПРОВЕРИТЬ! В оригинале больше
 {
 	return pair<iterator, iterator>(lower_bound(key), upper_bound(key));
 }
@@ -745,7 +745,29 @@ void	Tree<Key, Val, KeyOfValue, Comp, Alloc>::swap(Tree& tree)
 	//TODO: возможно, добавить swap alloc'аторов
 }
 
+template < typename Key, typename Val, typename KeyOfValue, typename Comp, typename Alloc >
+typename Tree<Key, Val, KeyOfValue, Comp, Alloc>::iterator	Tree<Key, Val, KeyOfValue, Comp, Alloc>::find(const key_type& key)
+{
+	iterator	tmp = _lower_bound(_tree_begin(), _tree_end(), key);
 
+	return (tmp == end() || _impl._key_compare(key, _node_key(tmp._node)) ? end() : tmp);
 }
+
+template < typename Key, typename Val, typename KeyOfValue, typename Comp, typename Alloc >
+typename Tree<Key, Val, KeyOfValue, Comp, Alloc>::const_iterator	Tree<Key, Val, KeyOfValue, Comp, Alloc>::find(const key_type& key) const
+{
+	const_iterator	tmp = _lower_bound(_tree_begin(), _tree_end(), key);
+
+	return (tmp == end() || _impl._key_compare(key, _node_key(tmp._node)) ? end() : tmp);
+}
+template < typename Key, typename Val, typename KeyOfValue, typename Comp, typename Alloc >
+typename Tree<Key, Val, KeyOfValue, Comp, Alloc>::size_type	Tree<Key, Val, KeyOfValue, Comp, Alloc>::count(const key_type& key) const
+{
+	const_iterator	it = find(key);
+
+	return (it == end() ? 0 : 1);
+}
+
+} // namespace ft
 
 #endif

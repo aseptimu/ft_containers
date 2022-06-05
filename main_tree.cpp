@@ -68,6 +68,8 @@ int main(void)
 	it = i.begin();
 	it++;
 	printBT(i._impl._header._parent);
+	std::cout << *(i.find(80)) << std::endl;
+	std::cout << *(i.end()) << std::endl << std::endl; 
 	
   std::cout << *(i.begin()) << std::endl;
 	std::cout << it.operator*() << std::endl;

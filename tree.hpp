@@ -244,7 +244,7 @@ struct TreeConstIterator : public TreeBaseIterator //TODO:Проверить!
 template < class Key, class Val, class KeyOfValue, class Comp, class Alloc = std::allocator<Val> >
 class Tree
 {
-private: // TODO: or protected?
+// private: // TODO: or protected?
 	// Node typedef
 	typedef NodeBase*			_base_ptr;
 	typedef const NodeBase*		_const_base_ptr;
@@ -267,7 +267,7 @@ public:
 	typedef typename allocator_type::template rebind<Node<Val> >::other	_node_allocator; // TODO: перенести в private?
 	typedef std::allocator_traits<_node_allocator>	_alloc_traits; // TODO: c++11!!!
 
-private: // TODO: or protected?
+// private: // TODO: or protected?
 // 	Node
 struct Alloc_node
 {
@@ -338,8 +338,8 @@ public: // TODO: delete!!!
 	_const_base_ptr& _get_max_node() const { return this->_impl._header._right; }
 	_link	_tree_begin() { return static_cast<_link>(this->_impl._header._parent); }
 	_const_link	_tree_begin() const { return static_cast<_const_link>(this->_impl._header._parent); }
-	_base_ptr	_tree_end() { return this->_impl._header; }
-	_const_base_ptr	_tree_end() const { return this->_impl._header; }
+	_base_ptr	_tree_end() { return &this->_impl._header; }
+	_const_base_ptr	_tree_end() const { return &this->_impl._header; }
 
 	// Node accessors
 	static const key_type&	_node_key(_const_link node) { return KeyOfValue()(node->_value); }
@@ -361,7 +361,7 @@ public: // TODO: delete!!!
 
 	// Prototypes and methods
 
-private:
+// private:
 	template < typename NodeGen >
 	_link	_copy_tree(_link copy, _base_ptr parent, NodeGen& node_generator); // Deep copy (every node must be copied)
 
@@ -403,8 +403,8 @@ public: // TODO: delete
 	Comp	key_comp() const { return _impl._key_compare; }
 	iterator	begin() { return iterator(_impl._header._left); }
 	const_iterator	begin() const { return const_iterator(_impl._header._left); }
-	iterator	end() { return iterator(_impl._header); }
-	const_iterator	end() const { return const_iterator(_impl._header); }
+	iterator	end() { return iterator(&_impl._header); }
+	const_iterator	end() const { return const_iterator(&_impl._header); }
 	reverse_iterator	rbegin() { return reverse_iterator(end()); }
 	const_reverse_iterator	rbegin() const { return reverse_iterator(end()); }
 	reverse_iterator	rend() { return reverse_iterator(begin()); }
@@ -487,10 +487,6 @@ public:
 
 };
 
-// template < class Key, class Val, class KeyOfValue, class Comp, class Alloc >
-// template < typename NodeGen >
-// typename Tree<Key, Val, KeyOfValue, Comp, Alloc>::_link	Tree<Key, Val, KeyOfValue, Comp, Alloc>::
-
 template < typename Key, typename Val, typename KeyOfValue, typename Comp, typename Alloc >
 Tree<Key, Val, KeyOfValue, Comp, Alloc>& Tree<Key, Val, KeyOfValue, Comp, Alloc>::operator=(const Tree& assign) // TODO: првоерить!
 {
@@ -505,15 +501,13 @@ Tree<Key, Val, KeyOfValue, Comp, Alloc>& Tree<Key, Val, KeyOfValue, Comp, Alloc>
 	return (*this);
 }
 
-// template < typename Key, typename Val, typename KeyOfValue, typename Comp, typename Alloc >
-// _insert... //и другие insert методы
 template < typename Key, typename Val, typename KeyOfValue, typename Comp, typename Alloc >
 ft::pair<typename Tree<Key, Val, KeyOfValue, Comp, Alloc>::_base_ptr, typename Tree<Key, Val, KeyOfValue, Comp, Alloc>::_base_ptr>	
 Tree<Key, Val, KeyOfValue, Comp, Alloc>::get_check_position(const key_type& key)
 {
 	typedef ft::pair<_base_ptr, _base_ptr>	res;
-	_link	node = _tree_begin();
-	_link	prev = _tree_end();
+	_link		node = _tree_begin();
+	_base_ptr	prev = _tree_end();
 	bool	compare = true;
 	
 	while(node != 0) // going to leaf
@@ -522,7 +516,7 @@ Tree<Key, Val, KeyOfValue, Comp, Alloc>::get_check_position(const key_type& key)
 		compare = _impl._key_compare(key, _node_key(node));
 		node = compare ? _node_left(node) : _node_right(node);
 	}
-	iterator check = prev;
+	iterator check = iterator(prev);
 	if (compare) // if left leaf reached
 	{
 		if (check == begin()) // if the minimum value is insert
@@ -583,12 +577,13 @@ Tree<Key, Val, KeyOfValue, Comp, Alloc>::get_insert_hint_pos(const_iterator pos,
 }
 
 //
+void	tree_insert_and_rebalance(const bool insert_left, NodeBase* node, NodeBase* parent, NodeBase& header);
 
 template < typename Key, typename Val, typename KeyOfValue, typename Comp, typename Alloc >
 template < typename NodeGen >
 typename Tree<Key, Val, KeyOfValue, Comp, Alloc>::iterator	Tree<Key, Val, KeyOfValue, Comp, Alloc>::_insert_in_tree(_base_ptr node, _base_ptr parent, const value_type& val, NodeGen& gen)
 {
-	bool	insert_left = (node != 0 || parent == end() || _impl._key_compare(KeyOfValue()(val), _node_key(parent)));
+	bool	insert_left = (node != 0 || parent == _tree_end() || _impl._key_compare(KeyOfValue()(val), _node_key(parent)));
 	_link	n = _create_node(val);
 
 	tree_insert_and_rebalance(insert_left, n, parent, _impl._header);

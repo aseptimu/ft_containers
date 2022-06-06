@@ -111,6 +111,12 @@ static Node<T>*	increment(Node<T>* _node)
 }
 
 template < typename T >
+const Node<T>*	increment(const Node<T>* _node)
+{
+	return increment(const_cast<Node<T>*>(_node));
+}
+
+template < typename T >
 static Node<T>*	decrement(Node<T>* _node)
 {
 	if (_node->_color == _red_n && 
@@ -135,6 +141,12 @@ static Node<T>*	decrement(Node<T>* _node)
 	return _node;
 }
 
+template < typename T >
+const Node<T>*	decrement(const Node<T>* _node)
+{
+	return decrement(const_cast<Node<T>*>(_node));
+}
+
 template < class T >
 struct TreeIterator
 {
@@ -143,7 +155,7 @@ struct TreeIterator
 	typedef T*							pointer;
 	typedef bidirectional_iterator_tag	iterator_category;
 	typedef ptrdiff_t					difference_type;
-	typedef typename Node<T>::_link		_link;
+	typedef Node<T>*					_link;
 	typedef TreeIterator<T>				iterator;
 
 	_link	_node;
@@ -158,6 +170,7 @@ struct TreeIterator
 
 	iterator& operator++()
 	{ _node = increment(_node); return (*this); }
+
 	iterator operator++(int)
 	{
 		iterator	tmp = *this;
@@ -167,16 +180,19 @@ struct TreeIterator
 
 	iterator& operator--()
 	{ _node = decrement(_node); return (*this); }
+
 	iterator operator--(int)
 	{
 		iterator	tmp = *this;
 		_node = decrement(_node);
 		return (tmp);
 	}
+
 	friend bool operator==(const TreeIterator<T>& left, const TreeIterator<T>& right)
 	{
 		return left._node == right._node;
 	}
+
 	friend bool	operator!=(const TreeIterator<T>& left, const TreeIterator<T>& right)
 	{
 		return left._node != right._node;
@@ -189,11 +205,12 @@ struct TreeConstIterator//TODO:Проверить!
 	typedef T								value_type;
 	typedef const T&						reference;
 	typedef const T*						pointer;
+	typedef TreeIterator<T>					iterator;
+	typedef	TreeConstIterator<T>			const_iterator;
 	typedef bidirectional_iterator_tag		iterator_category;
 	typedef ptrdiff_t						difference_type;
 	typedef typename Node<T>::_link			_link;
 	typedef typename Node<T>::_Const_link	_const_link;
-	typedef TreeConstIterator<T>			iterator;
 
 	_const_link	_node;
 	TreeConstIterator() {_node = NULL; }
@@ -206,23 +223,26 @@ struct TreeConstIterator//TODO:Проверить!
 	pointer	operator->() const
 	{ return &(operator*()); }
 
-	iterator& operator++()
+	const_iterator& operator++()
 	{ _node = increment(_node); return (*this); }
-	iterator operator++(int)
+
+	const_iterator operator++(int)
 	{
-		iterator	tmp = *this;
+		const_iterator	tmp = *this;
 		_node = increment(_node);
 		return (tmp);
 	}
 
-	iterator& operator--()
+	const_iterator& operator--()
 	{ _node = decrement(_node); return (*this); }
-	iterator operator--(int)
+
+	const_iterator operator--(int)
 	{
-		iterator	tmp = *this;
+		const_iterator	tmp = *this;
 		_node = decrement(_node);
 		return (tmp);
 	}
+
 	friend bool operator==(const TreeConstIterator<T>& left, const TreeConstIterator<T>& right)
 	{
 		return left._node == right._node;
@@ -620,7 +640,7 @@ Node<Val>*	tree_rebalance_for_erase(Node<Val>* const node, Node<Val>& header);
 template < typename Key, typename Val, typename KeyOfValue, typename Comp, typename Alloc >
 void	Tree<Key, Val, KeyOfValue, Comp, Alloc>::_erase_aux(const_iterator pos)
 {
-	_link	del = tree_rebalance_for_erase(pos._node, _impl._header);
+	_link	del = tree_rebalance_for_erase(const_cast<_link>(pos._node), _impl._header);
 
 	_drop_node(del);
 	--_impl._nodeCount;

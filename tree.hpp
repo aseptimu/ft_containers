@@ -186,17 +186,18 @@ struct TreeIterator
 template < class T >
 struct TreeConstIterator//TODO:Проверить!
 {
-	typedef T							value_type;
-	typedef const T&					reference;
-	typedef const T*					pointer;
-	typedef bidirectional_iterator_tag	iterator_category;
-	typedef ptrdiff_t					difference_type;
-	typedef typename Node<T>::_link		_link;
-	typedef TreeIterator<T>				iterator;
+	typedef T								value_type;
+	typedef const T&						reference;
+	typedef const T*						pointer;
+	typedef bidirectional_iterator_tag		iterator_category;
+	typedef ptrdiff_t						difference_type;
+	typedef typename Node<T>::_link			_link;
+	typedef typename Node<T>::_Const_link	_const_link;
+	typedef TreeConstIterator<T>			iterator;
 
-	_link	_node;
+	_const_link	_node;
 	TreeConstIterator() {_node = NULL; }
-	explicit TreeConstIterator(_link node) { _node = node; }
+	explicit TreeConstIterator(_const_link node) : _node(node) {  }
 	TreeConstIterator(const iterator& it) { _node = it._node; }
 
 	reference	operator*() const 
@@ -613,6 +614,9 @@ ft::pair<typename Tree<Key, Val, KeyOfValue, Comp, Alloc>::iterator, bool>	Tree<
 
 // Erase
 
+template < typename Val >
+Node<Val>*	tree_rebalance_for_erase(Node<Val>* const node, Node<Val>& header);
+
 template < typename Key, typename Val, typename KeyOfValue, typename Comp, typename Alloc >
 void	Tree<Key, Val, KeyOfValue, Comp, Alloc>::_erase_aux(const_iterator pos)
 {
@@ -635,7 +639,7 @@ void	Tree<Key, Val, KeyOfValue, Comp, Alloc>::_erase_aux(const_iterator first, c
 }
 
 template < typename Key, typename Val, typename KeyOfValue, typename Comp, typename Alloc >
-Tree<Key, Val, KeyOfValue, Comp, Alloc>::size_type	Tree<Key, Val, KeyOfValue, Comp, Alloc>::erase(const key_type& key)
+typename Tree<Key, Val, KeyOfValue, Comp, Alloc>::size_type	Tree<Key, Val, KeyOfValue, Comp, Alloc>::erase(const key_type& key)
 {
 	pair<iterator, iterator> del = equal_range(key);
 	const size_type	old_size = size();

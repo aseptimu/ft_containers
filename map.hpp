@@ -6,7 +6,7 @@
 /*   By: aseptimu <aseptimu@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 16:38:49 by aseptimu          #+#    #+#             */
-/*   Updated: 2022/06/07 14:00:49 by aseptimu         ###   ########.fr       */
+/*   Updated: 2022/06/07 18:40:02 by aseptimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,32 @@ public:
 	{ return tree.max_size(); }
 
 	// Element access
-	
+	mapped_type&	operator[](const key_type& key)
+	{
+		iterator	i = lower_bound(key);
+
+		if (i == end() || key_comp()(key ,(*i).first))
+			i = insert(i, value_type(key, mapped_type()));
+		return (*i).second;
+	}
+
+	mapped_type&	at(const key_type& key)
+	{
+		iterator	i = lower_bound(key);
+
+		if (i == end() || key_comp()(key, (*i).first))
+			throw std::out_of_range("map::at:  key not found");
+		return (*i).second;
+	}
+
+	const mapped_type&	at(const key_type& key) const
+	{
+		const_iterator	i = lower_bound(key);
+
+		if (i == end() || key_comp()(key, (*i).first))
+			throw std::out_of_range("map::at:  key not found");
+		return (*i).second;
+	}
 
 	// Modifiers
 	ft::pair<iterator, bool>	insert(const value_type& val)

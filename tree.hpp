@@ -218,7 +218,7 @@ struct TreeConstIterator//TODO:Проверить!
 	TreeConstIterator(const iterator& it) { _node = it._node; }
 
 	reference	operator*() const 
-	{ return static_cast<_link>(_node)->_value;  }
+	{ return static_cast<_const_link>(_node)->_value;  }
 
 	pointer	operator->() const
 	{ return &(operator*()); }
@@ -802,7 +802,7 @@ void	Tree<Key, Val, KeyOfValue, Comp, Alloc>::swap(Tree& tree)
 {
 	if (_get_root() == 0)
 	{
-		if (tree._get_root != 0)
+		if (tree._get_root() != 0)
 			_impl._move_data(tree._impl);
 	}
 	else if (tree._get_root() == 0)

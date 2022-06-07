@@ -170,7 +170,48 @@ int main(void)
 		printBT(" ", mpp.tree._impl._header._parent, false);
 		for (ft::map<int, int>::iterator it = mpp.begin(); it != mpp.end(); it++)
 		{ v.push_back(it->first); }
+		try
+		{
+		mpp.at(1000);
+			/* code */
+		}
+		catch(const std::exception& e)
+		{
+			std::cerr << e.what() << '\n';
+		}
+		std::cout << (mpp == m);
+		
 		// for (ft::map<int, int>::iterator it = --mpp.end(); it != mpp.begin(); it--)
 		// { v.push_back(it->first); }
+	}
+
+	{
+		ft::map<int, int> mp;
+		std::vector<int> v;
+		for (int i = 0, j = 0; i < 25 * 10000; i++, j++)
+			mp.insert(ft::make_pair(i, j));
+		ft::map<int, int> ll;
+		ll.swap(mp);
+	}
+
+	{
+		  std::map<char,int> foo,bar;
+
+  foo['x']=100;
+  foo['y']=200;
+
+  bar['a']=11;
+  bar['b']=22;
+  bar['c']=33;
+
+  foo.swap(bar);
+
+  std::cout << "foo contains:\n";
+  for (std::map<char,int>::iterator it=foo.begin(); it!=foo.end(); ++it)
+    std::cout << it->first << " => " << it->second << '\n';
+
+  std::cout << "bar contains:\n";
+  for (std::map<char,int>::iterator it=bar.begin(); it!=bar.end(); ++it)
+    std::cout << it->first << " => " << it->second << '\n';
 	}
 }

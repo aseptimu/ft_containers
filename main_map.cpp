@@ -7,64 +7,105 @@
 #include <vector>
 #include <map>
 #include <set>
+#include "map.hpp"
+#include <unistd.h>
 
 using namespace std;
+
+template < typename T >
+void printBT(const std::string& prefix, const ft::Node<T>* node, bool isLeft)
+{
+    if( node != nullptr )
+    {
+        std::cout << prefix;
+
+        std::cout << (isLeft ? "├──" : "└──" );
+
+        // print the value of the node
+        std::cout << node->_value.first << std::endl;
+
+        // enter the next tree level - left and right branch
+        printBT( prefix + (isLeft ? "│   " : "    "), node->_left, true);
+        printBT( prefix + (isLeft ? "│   " : "    "), node->_right, false);
+    }
+}
 
 int main(void)
 {
 	{
-		map<int, string> i;
-		i.insert(pair<int, string>(10, "lol"));
-		i.insert(pair<int, string>(10, "kek"));
-		map<int, string>::iterator g = i.find(20);
+		ft::map<int, int> i;
+		ft::map<int, int> ll(i);
+		ft::pair<int, int> pi;
+		ft::map<int, int>::iterator itb;
+		ft::map<int, int>::iterator	ite;
+		cout << boolalpha << "empyt: " << i.empty() << endl;
+		cout << "size: " << i.size() << endl;
+		cout << "max_size: " << i.max_size() << endl;
+		cout << endl;
+		i.insert(ft::make_pair(10, 10));
+		itb = i.begin();
+		i.insert(itb, ft::make_pair(20, 70));
+		ite = i.end();
+		ft::map<int, int> mp;
+		for (int i = 0, j = 10; i < 30 * 10; ++i, ++j) {
+        	mp.insert(ft::make_pair(i, j));
+		ft::map<int, int> mp2(mp.begin(), mp.end());
+		ft::map<int, int>::iterator it = mp2.begin();
+		std::vector<int> v;
+	for (int i = 0; i < 30 * 10; ++i, it++) {
+        v.push_back(it->first);
+        v.push_back(it->second);
+    }
 
-		if (g != i.end())
-			cout << i.find(10)->second << endl;
-		else
-			cout << "lol" << endl;
+    }
+		// i.insert(itb, ite);
+
+
 	}
 
 	{
+		std::map<int, int> i;
+		std::map<int, int> ll(i);
+		std::pair<int, int> pi;
+		std::map<int, int>::iterator itb;
+		std::map<int, int>::iterator	ite;
+		cout << boolalpha << "empyt: " << i.empty() << endl;
+		cout << "size: " << i.size() << endl;
+		cout << "max_size: " << i.max_size() << endl;
 		cout << endl;
-		ft::pair<int, string> test;
-		ft::pair<const int, const string> test2 (23, "lol");
-		ft::pair<const int, const string> test3 (test2);
-		test.first = 0;
-		test.second = "kek";
-
-		cout << test.first << " string: " << test.second << endl;
-		cout << test2.first << " stirng: " << test2.second << endl;
-		cout << test3.first << " string: " << test3.second << endl;
+		i.insert(std::make_pair(10, 10));
+		itb = i.begin();
+		i.insert(itb, std::make_pair(20, 70));
+		ite = i.end();
+		i.insert(itb, ite);
 	}
 
 	{
-		cout << endl;
-		ft::pair <string, int> planet, homeplanet;
-
-		planet = ft::make_pair("Earth", 6371);
-
-		homeplanet = planet;
-
-		cout << "Home planet: " << homeplanet.first << endl;
-		cout << "Planet size: " << homeplanet.second << endl;
+		std::vector<int> v;
+		ft::map<int, int> mp;
+		for (int i = 0, j = 10; i < 20; ++i, ++j)
+        	mp.insert(ft::make_pair(i, j));
+			ft::map<int, int> mp2;
+    	for (int i = 20, j = 200010; i < 40; ++i, ++j)
+        	mp2.insert(ft::make_pair(i, j));
+		mp2 = mp;
+    	ft::map<int, int>::iterator it = mp2.begin();
+    	ft::map<int, int>::iterator itb = mp2.begin();
+    	ft::map<int, int>::iterator ite = mp2.end();
+		ite--;
+		ite--;
+		printBT(" ", mp2.tree._impl._header._parent, false);
+		// for (; it != mp2.end(); it++) {
+		// 	std::cout << "begin: " << mp2.begin()._node->_value.first << std::endl;
+		// 	std::cout << it._node->_value.first << endl;
+		// 	std::cout << "end: " << ite._node->_value.first << std::endl;
+        // v.push_back(it->first);
+        // v.push_back(it->second);
+		// }
+		    // v.push_back(mp2.size());
 	}
 
 	{
-		cout << endl;
-		std::pair<int,char> foo (10,'x');
-		std::pair<int,char> bar (90,'a');
 
-		if (foo==bar) std::cout << "foo and bar are equal\n";
-		if (foo!=bar) std::cout << "foo and bar are not equal\n";
-		if (foo< bar) std::cout << "foo is less than bar\n";
-		if (foo> bar) std::cout << "foo is greater than bar\n";
-		if (foo<=bar) std::cout << "foo is less than or equal to bar\n";
-		if (foo>=bar) std::cout << "foo is greater than or equal to bar\n";
-	}
-
-	{
-		cout << endl;
-		std::map<int, string> i;
-		
 	}
 }

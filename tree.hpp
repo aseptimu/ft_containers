@@ -342,12 +342,13 @@ public: // TODO: delete!!!
 //protected?
 	// Tree accessors
 	_link& _get_root() { return this->_impl._header._parent; }
-	_const_link& _get_root() const { return this->_impl._header._parent; }
+	_const_link _get_root() const { return this->_impl._header._parent; }
 	_link& _get_min_node() { return this->_impl._header._left; }
-	_const_link& _get_min_node() const { return this->_impl._header._left; }
+	_const_link _get_min_node() const { return this->_impl._header._left; }
 	_link& _get_max_node() { return this->_impl._header._right; }
-	_const_link& _get_max_node() const { return this->_impl._header._right; }
-	_link	_tree_begin() { return this->_impl._header._parent; }
+	_const_link _get_max_node() const { return this->_impl._header._right; }
+	_link	_tree_cast_begin() const { return static_cast<_link>(this->_impl._header._parent); }
+	_link	_tree_begin() { return _tree_cast_begin(); }
 	_const_link	_tree_begin() const { return this->_impl._header._parent; }
 	_link	_tree_end() { return &this->_impl._header; }
 	_const_link	_tree_end() const { return &this->_impl._header; }
@@ -376,9 +377,9 @@ public: // TODO: delete!!!
 	_link	_copy_tree(_link copy, _link parent, NodeGen& node_generator); // Deep copy (every node must be copied)
 
 	template < typename NodeGen >
-	_link	_copy_tree(Tree& tree, NodeGen& node_generator)
+	_link	_copy_tree(const Tree& tree, NodeGen& node_generator)
 	{
-		_link	root = _copy_tree(tree._tree_begin(), tree._tree_end(), node_generator);
+		_link	root = _copy_tree(tree._tree_cast_begin(), const_cast<_link>(tree._tree_end()), node_generator); // TODO: исправить! Не должно быть тут const_cast
 		_get_min_node() = _min_subtree_node(root);
 		_get_max_node() = _max_subtree_node(root);
 		_impl._nodeCount = tree._impl._nodeCount;
@@ -443,11 +444,11 @@ public: // TODO: delete
 		return _insert_(it, val, an);
 	}
 	template < typename InputIterator >
-	void	_insert_range(InputIterator first, InputIterator end)
+	void	_insert_range(InputIterator first, InputIterator last)
 	{
 		Alloc_node	an(*this);
 
-		for(; first != end; ++first)
+		for(; first != last; ++first)
 			_insert_(end(), *first, an);
 	}
 
@@ -838,9 +839,7 @@ typename Tree<Key, Val, KeyOfValue, Comp, Alloc>::const_iterator	Tree<Key, Val, 
 template < typename Key, typename Val, typename KeyOfValue, typename Comp, typename Alloc >
 typename Tree<Key, Val, KeyOfValue, Comp, Alloc>::size_type	Tree<Key, Val, KeyOfValue, Comp, Alloc>::count(const key_type& key) const
 {
-	const_iterator	it = find(key);
-
-	return (it == end() ? 0 : 1);
+	return (find(key) == end() ? 0 : 1);
 }
 
 } // namespace ft

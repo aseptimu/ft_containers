@@ -379,7 +379,7 @@ public: // TODO: delete!!!
 	template < typename NodeGen >
 	_link	_copy_tree(const Tree& tree, NodeGen& node_generator)
 	{
-		_link	root = _copy_tree(tree._tree_cast_begin(), const_cast<_link>(tree._tree_end()), node_generator); // TODO: исправить! Не должно быть тут const_cast
+		_link	root = _copy_tree(tree._tree_cast_begin(), _tree_end(), node_generator);
 		_get_min_node() = _min_subtree_node(root);
 		_get_max_node() = _max_subtree_node(root);
 		_impl._nodeCount = tree._impl._nodeCount;

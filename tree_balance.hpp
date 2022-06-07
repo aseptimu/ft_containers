@@ -32,6 +32,7 @@ namespace ft
 		node->_left = tmp->_right;
 		if (tmp->_right != 0)
 			tmp->_right->_parent = node;
+		tmp->_parent = node->_parent;
 		if (node == root)
 			root = tmp;
 		else if (node == node->_parent->_right)

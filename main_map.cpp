@@ -149,4 +149,28 @@ int main(void)
 		}
 		std::cout << std::endl;
 	}
+
+	{
+		std::vector<int> v;
+		ft::map<int, int> m;
+		ft::map<int, int> mpp;
+		mpp.insert(ft::make_pair(16, 3));
+		mpp.insert(ft::make_pair(8, 3));
+		mpp.insert(ft::make_pair(23, 3));
+		ft::map<int,int>::iterator i = mpp.insert(ft::make_pair(7, 3)).first;
+		mpp.insert(ft::make_pair(19, 3));
+		mpp.insert(ft::make_pair(29, 3));
+		mpp.insert(ft::make_pair(41, 3));
+				printBT(" ", mpp.tree._impl._header._parent, false);
+		std::cout << std::endl;
+		mpp.insert(ft::make_pair(4, 3));
+				printBT(" ", mpp.tree._impl._header._parent, false);
+		std::cout << std::endl;
+		mpp.insert(ft::make_pair(11, 3));
+		printBT(" ", mpp.tree._impl._header._parent, false);
+		for (ft::map<int, int>::iterator it = mpp.begin(); it != mpp.end(); it++)
+		{ v.push_back(it->first); }
+		// for (ft::map<int, int>::iterator it = --mpp.end(); it != mpp.begin(); it--)
+		// { v.push_back(it->first); }
+	}
 }

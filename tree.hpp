@@ -76,6 +76,8 @@ struct NodeHeader
 		_header._right = copy._header._right;
 		_header._parent->_parent = &_header;
 		_nodeCount = copy._nodeCount;
+
+		copy._reset();
 	}
 
 	void	_reset()
@@ -507,6 +509,7 @@ Tree<Key, Val, KeyOfValue, Comp, Alloc>& Tree<Key, Val, KeyOfValue, Comp, Alloc>
 	if (this != &assign)
 	{
 		Alloc_node an(*this); //TODO: обсобенно это проверить!
+		_erase(_tree_begin()); // TODO: Fixed leak, but check work!!
 		_impl._reset(); //TODO: проверить утечки!
 		_impl._key_compare = assign._impl._key_compare;
 		if (assign._get_root() != 0)

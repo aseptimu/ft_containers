@@ -34,7 +34,10 @@ void printBT(const std::string& prefix, const ft::Node<T>* node, bool isLeft)
         std::cout << (isLeft ? "├──" : "└──" );
 
         // print the value of the node
-        std::cout << node->_value << std::endl;
+		if (node->_color == 1)
+        std::cout << node->_value << " b" << std::endl;
+		else
+        std::cout << node->_value << " r" << std::endl;
 
         // enter the next tree level - left and right branch
         printBT( prefix + (isLeft ? "│   " : "    "), node->_left, true);

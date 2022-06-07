@@ -185,33 +185,65 @@ int main(void)
 		// { v.push_back(it->first); }
 	}
 
+	// {
+	// 	ft::map<int, int> mp;
+	// 	std::vector<int> v;
+	// 	for (int i = 0, j = 0; i < 25 * 10000; i++, j++)
+	// 		mp.insert(ft::make_pair(i, j));
+	// 	ft::map<int, int> ll;
+	// 	ll.swap(mp); // TODO: seg_fault
+	// }
+
+	// {
+	// 	std::map<int, int> mp;
+	// 	std::vector<int> v;
+	// 	for (int i = 0, j = 0; i < 25 * 10000; i++, j++)
+	// 		mp.insert(std::make_pair(i, j));
+	// 	std::map<int, int> ll;
+	// 	ll.swap(mp);	
+	// }
+
 	{
-		ft::map<int, int> mp;
-		std::vector<int> v;
-		for (int i = 0, j = 0; i < 25 * 10000; i++, j++)
-			mp.insert(ft::make_pair(i, j));
-		ft::map<int, int> ll;
-		ll.swap(mp);
+		std::cout << std::endl;
+		std::map<char,int> foo,bar;
+
+		foo['x']=100;
+		foo['y']=200;
+
+		bar['a']=11;
+		bar['b']=22;
+		bar['c']=33;
+
+		foo.swap(bar);
+
+		std::cout << "foo contains:\n";
+		for (std::map<char,int>::iterator it=foo.begin(); it!=foo.end(); ++it)
+			std::cout << it->first << " => " << it->second << '\n';
+
+		std::cout << "bar contains:\n";
+		for (std::map<char,int>::iterator it=bar.begin(); it!=bar.end(); ++it)
+			std::cout << it->first << " => " << it->second << '\n';
+		std::cout << std::endl;
 	}
 
 	{
-		  std::map<char,int> foo,bar;
+		ft::map<char,int> foo,bar;
 
-  foo['x']=100;
-  foo['y']=200;
+		foo['x']=100;
+		foo['y']=200;
 
-  bar['a']=11;
-  bar['b']=22;
-  bar['c']=33;
+		bar['a']=11;
+		bar['b']=22;
+		bar['c']=33;
 
-  foo.swap(bar);
+		foo.swap(bar);
 
-  std::cout << "foo contains:\n";
-  for (std::map<char,int>::iterator it=foo.begin(); it!=foo.end(); ++it)
-    std::cout << it->first << " => " << it->second << '\n';
+		std::cout << "foo contains:\n";
+		for (ft::map<char,int>::iterator it=foo.begin(); it!=foo.end(); ++it)
+			std::cout << it->first << " => " << it->second << '\n';
 
-  std::cout << "bar contains:\n";
-  for (std::map<char,int>::iterator it=bar.begin(); it!=bar.end(); ++it)
-    std::cout << it->first << " => " << it->second << '\n';
+		std::cout << "bar contains:\n";
+		for (ft::map<char,int>::iterator it=bar.begin(); it!=bar.end(); ++it)
+			std::cout << it->first << " => " << it->second << '\n';
 	}
 }

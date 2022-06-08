@@ -6,7 +6,7 @@
 /*   By: aseptimu <aseptimu@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 16:38:49 by aseptimu          #+#    #+#             */
-/*   Updated: 2022/06/08 12:33:06 by aseptimu         ###   ########.fr       */
+/*   Updated: 2022/06/08 17:42:19 by aseptimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ namespace ft
 
 template <	class Key,
 			class T,
-			class Compare = std::less<Key>, // TODO: может быть свою написать?
+			class Compare = std::less<Key>,
 			class Alloc = std::allocator<ft::pair< const Key, T> >
 			>
 class map
@@ -49,7 +49,6 @@ public:
 	};
 
 private:
-public: // TODO: delete
 typedef Tree<key_type, value_type, Select1st<value_type>, key_compare, Alloc>	Tree_type;
 
 Tree_type	tree;
@@ -58,7 +57,7 @@ public:
 	typedef typename Alloc::pointer						pointer;
 	typedef typename Alloc::const_pointer				const_pointer;
 	typedef value_type&									reference;
-	typedef const value_type							const_reference;
+	typedef const value_type&							const_reference;
 	typedef typename Tree_type::iterator				iterator;
 	typedef typename Tree_type::const_iterator			const_iterator;
 	typedef typename Tree_type::size_type				size_type;

@@ -3,12 +3,6 @@
 
 # include "iterator.hpp"
 # include "utils.hpp"
-#include <map> // TOOD: delete
-// https://programmersought.com/article/57362384120/
-//https://programmersought.com/article/11974230627/
-
-// _M_insert_range_equal не нужны!
-// _M_insert_equal* НЕ НУЖНЫ! Для multi set/map!
 
 namespace ft
 {
@@ -202,14 +196,14 @@ struct TreeIterator
 };
 
 template < class T >
-struct TreeConstIterator//TODO:Проверить!
+struct TreeConstIterator
 {
 	typedef T								value_type;
 	typedef const T&						reference;
 	typedef const T*						pointer;
 	typedef TreeIterator<T>					iterator;
 	typedef	TreeConstIterator<T>			const_iterator;
-	typedef std::bidirectional_iterator_tag		iterator_category;
+	typedef std::bidirectional_iterator_tag	iterator_category;
 	typedef ptrdiff_t						difference_type;
 	typedef typename Node<T>::_link			_link;
 	typedef typename Node<T>::_Const_link	_const_link;
@@ -259,8 +253,7 @@ struct TreeConstIterator//TODO:Проверить!
 template < class Key, class Val, class KeyOfValue, class Comp, class Alloc = std::allocator<Val> >
 class Tree
 {
-// private: // TODO: or protected?
-	// Node typedef
+protected:
 	typedef Node<Val>*			_link;
 	typedef const Node<Val>*	_const_link;
 
@@ -276,12 +269,10 @@ public:
 	typedef ptrdiff_t			difference_type;
 	typedef Alloc				allocator_type;
 
+private:
+	typedef typename allocator_type::template rebind<Node<Val> >::other	_node_allocator;
 
-	typedef typename allocator_type::template rebind<Node<Val> >::other	_node_allocator; // TODO: перенести в private?
-	// typedef std::allocator_traits<_node_allocator>	_alloc_traits; // TODO: c++11!!!
 
-// private: // TODO: or protected?
-// 	Node
 struct Alloc_node
 {
 	Alloc_node(Tree& tree) : _tree(tree) { }
@@ -289,14 +280,16 @@ struct Alloc_node
 	template<typename Arg>
 	_link	operator()(const Arg& arg) const { return _tree._create_node(arg); }
 
+private:
 	Tree& _tree;
 };
-
-public: // TODO: delete!!!
+public:
 	// Node management
 	_node_allocator&	_get_node_allocator() { return this->_impl; }
 	const _node_allocator&	_get_node_allocator() const { return this->_impl; }
 	allocator_type	get_allocator() const { return allocator_type(_get_node_allocator()); }
+
+protected:
 	_link	_get_node() { return _node_allocator().allocate(1); } // allocate node
 	void	_put_node(_link _p) { _node_allocator().deallocate(_p, 1); } // deallocate node
 	void	_construct_node(_link node, const value_type& val) // construct node.
@@ -329,7 +322,7 @@ public: // TODO: delete!!!
 		return tmp;
 	}
 
-	template < typename _Key_comp > // TODO: может удалить и вынести за структуру?
+	template < typename _Key_comp >
 	struct _tree_impl : public NodeHeader<Val>, public _node_allocator
 	{
 		_Key_comp	_key_compare;
@@ -341,7 +334,7 @@ public: // TODO: delete!!!
 
 	_tree_impl<Comp> _impl;
 
-//protected?
+protected:
 	// Tree accessors
 	_link& _get_root() { return this->_impl._header._parent; }
 	_const_link _get_root() const { return this->_impl._header._parent; }
@@ -365,7 +358,7 @@ public: // TODO: delete!!!
 	static _const_link	_min_subtree_node(_const_link node) { return Node<Val>::_Node_min(node); }
 	static _link	_max_subtree_node(_link node) { return Node<Val>::_Node_max(node); }
 	static _const_link	_max_subtree_node(_const_link node) { return Node<Val>::_Node_max(node); }
-
+public:
 	// Iterator typedef
 	typedef TreeIterator<value_type>								iterator;
 	typedef TreeConstIterator<value_type>							const_iterator;
@@ -374,7 +367,7 @@ public: // TODO: delete!!!
 
 	// Prototypes and methods
 
-// private:
+private:
 	template < typename NodeGen >
 	_link	_copy_tree(_link copy, _link parent, NodeGen& node_generator); // Deep copy (every node must be copied)
 
@@ -400,7 +393,7 @@ public: // TODO: delete!!!
 	iterator	_upper_bound(_link begin, _link end, const key_type& key);
 	const_iterator	_upper_bound(_const_link begin, _const_link end, const key_type& key) const;
 
-public: // TODO: delete
+public:
 	// allocation/deallocation
 	Tree() { }
 	Tree(const Comp& comp, const allocator_type& a = allocator_type()) : _impl(comp, _node_allocator(a)) { }
@@ -419,13 +412,13 @@ public: // TODO: delete
 	iterator	end() { return iterator(&_impl._header); }
 	const_iterator	end() const { return const_iterator(&_impl._header); }
 	reverse_iterator	rbegin() { return reverse_iterator(end()); }
-	const_reverse_iterator	rbegin() const { return reverse_iterator(end()); }
+	const_reverse_iterator	rbegin() const { return const_reverse_iterator(end()); }
 	reverse_iterator	rend() { return reverse_iterator(begin()); }
 	const_reverse_iterator	rend() const { return const_reverse_iterator(begin()); }
 	bool	empty() const { return _impl._nodeCount == 0; }
 	size_type	size() const { return _impl._nodeCount; }
 	size_type	max_size() const { return _node_allocator().max_size(); }
-	void	swap(Tree& tree); //TODO: сделать
+	void	swap(Tree& tree);
 
 	// Insert/erase
 
@@ -454,18 +447,18 @@ public: // TODO: delete
 			_insert_(end(), *first, an);
 	}
 
-// private:
+private:
 	void	_erase_aux(const_iterator pos);
 	void	_erase_aux(const_iterator first, const_iterator last);
-public: // TODO: what???
+public:
 	void	erase(iterator	pos)
 	{
-		if (pos != end()) // TODO: проверить!
+		if (pos != end())
 			_erase_aux(pos);
 	}
 	void	erase(const_iterator	pos)
 	{
-		if (pos != end()) // TODO: проверить!
+		if (pos != end())
 			_erase_aux(pos);
 	}
 	size_type	erase(const key_type& key);
@@ -496,7 +489,7 @@ public: // TODO: what???
 		return lhs.size() == rhs.size() && ft::equal(lhs.begin(), lhs.end(), rhs.begin());
 	}
 
-	friend bool	operator<(const Tree& lhs, const Tree& rhs) // TODO: другие должны быть?
+	friend bool	operator<(const Tree& lhs, const Tree& rhs)
 	{
 		return ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
 	}
@@ -504,16 +497,16 @@ public: // TODO: what???
 };
 
 template < typename Key, typename Val, typename KeyOfValue, typename Comp, typename Alloc >
-Tree<Key, Val, KeyOfValue, Comp, Alloc>& Tree<Key, Val, KeyOfValue, Comp, Alloc>::operator=(const Tree& assign) // TODO: првоерить!
+Tree<Key, Val, KeyOfValue, Comp, Alloc>& Tree<Key, Val, KeyOfValue, Comp, Alloc>::operator=(const Tree& assign)
 {
 	if (this != &assign)
 	{
-		Alloc_node an(*this); //TODO: обсобенно это проверить!
-		_erase(_tree_begin()); // TODO: Fixed leak, but check work!!
-		_impl._reset(); //TODO: проверить утечки!
+		Alloc_node an(*this);
+		_erase(_tree_begin());
+		_impl._reset();
 		_impl._key_compare = assign._impl._key_compare;
 		if (assign._get_root() != 0)
-			_get_root() = _copy_tree(assign, an); // TODO: Ещё раз! УТЕЧКИ!
+			_get_root() = _copy_tree(assign, an);
 	}
 	return (*this);
 }
@@ -595,7 +588,7 @@ Tree<Key, Val, KeyOfValue, Comp, Alloc>::get_insert_hint_pos(const_iterator pos,
 		return res(position._node, 0);
 }
 
-//
+// Insert
 template < typename Val >
 void	tree_insert_and_rebalance(const bool insert_left, Node<Val>* node, Node<Val>* parent, Node<Val>& header);
 
@@ -674,7 +667,7 @@ typename Tree<Key, Val, KeyOfValue, Comp, Alloc>::size_type	Tree<Key, Val, KeyOf
 
 template < typename Key, typename Val, typename KeyOfValue, typename Comp, typename Alloc >
 template < typename NodeGen >
-typename Tree<Key, Val, KeyOfValue, Comp, Alloc>::_link	Tree<Key, Val, KeyOfValue, Comp, Alloc>::_copy_tree(_link copy, _link parent, NodeGen& gen) // TODO: проверить!!
+typename Tree<Key, Val, KeyOfValue, Comp, Alloc>::_link	Tree<Key, Val, KeyOfValue, Comp, Alloc>::_copy_tree(_link copy, _link parent, NodeGen& gen)
 {
 	_link	top = _clone_node(copy, gen);
 
@@ -782,14 +775,14 @@ typename Tree<Key, Val, KeyOfValue, Comp, Alloc>::const_iterator	Tree<Key, Val, 
 
 template < typename Key, typename Val, typename KeyOfValue, typename Comp, typename Alloc >
 ft::pair<typename Tree<Key, Val, KeyOfValue, Comp, Alloc>::iterator, typename Tree<Key, Val, KeyOfValue, Comp, Alloc>::iterator>
-Tree<Key, Val, KeyOfValue, Comp, Alloc>::equal_range(const key_type& key) // TODO: проверить!!!
+Tree<Key, Val, KeyOfValue, Comp, Alloc>::equal_range(const key_type& key)
 {
 	return pair<iterator, iterator>(lower_bound(key), upper_bound(key));
 }
 
 template < typename Key, typename Val, typename KeyOfValue, typename Comp, typename Alloc >
 ft::pair<typename Tree<Key, Val, KeyOfValue, Comp, Alloc>::const_iterator, typename Tree<Key, Val, KeyOfValue, Comp, Alloc>::const_iterator>
-Tree<Key, Val, KeyOfValue, Comp, Alloc>::equal_range(const key_type& key) const //TODO: ЭТО ТОЖЕ ПРОВЕРИТЬ! В оригинале больше
+Tree<Key, Val, KeyOfValue, Comp, Alloc>::equal_range(const key_type& key) const
 {
 	return pair<const_iterator, const_iterator>(lower_bound(key), upper_bound(key));
 }
@@ -821,7 +814,6 @@ void	Tree<Key, Val, KeyOfValue, Comp, Alloc>::swap(Tree& tree)
 		ft::swap(_impl._nodeCount, tree._impl._nodeCount);
 	}
 	ft::swap(_impl._key_compare, tree._impl._key_compare);
-	//TODO: возможно, добавить swap alloc'аторов
 }
 
 template < typename Key, typename Val, typename KeyOfValue, typename Comp, typename Alloc >

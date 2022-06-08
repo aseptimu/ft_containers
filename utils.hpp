@@ -179,6 +179,16 @@ struct Select1st
 	{ return x.first; }
 };
 
+template < typename T >
+struct Identity
+{
+	T& operator()(T& val) const
+	{ return val; }
+
+	const T& operator()(const T& val) const
+	{ return val; }
+};
+
 
 } // namespace ft
 

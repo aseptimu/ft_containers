@@ -263,9 +263,9 @@ int main(void)
         ft::map<char, int>::reverse_iterator it2 = m.rend();
         ft::map<char, int>::const_reverse_iterator cit = m.rbegin();
         ft::map<char, int>::const_reverse_iterator cit2 = m.rend();
-		if (it == cit2)
+		if (it == cit)
 			std::cout << "good";
-		std::advance(it, 1);
+		// std::advance(it, 1);
 		ft::iterator_traits<ft::map<char, int>::reverse_iterator>::difference_type i;
 		std::iterator_traits<std::map<char, int>::reverse_iterator>::difference_type j;
 		std::iterator_traits<ft::map<char, int>::reverse_iterator>::difference_type k;
@@ -286,9 +286,9 @@ int main(void)
         std::map<char, int>::reverse_iterator it2 = m.rend();
         std::map<char, int>::const_reverse_iterator cit = m.rbegin();
         std::map<char, int>::const_reverse_iterator cit2 = m.rend();
-		if (it == cit2)
+		if (it == cit)
 			std::cout << "good";
-		std::advance(it, 1);
+		// std::advance(it, 1);
 	}
 
 	{
@@ -297,7 +297,7 @@ int main(void)
 		i[1] = 20;
 		ft::vector<int>::reverse_iterator it = i.rbegin();
 		ft::vector<int>::reverse_iterator ite = i.rend();
-		std::advance(it, 1);
+		// std::advance(it, 1);
 	}
 	{
 		std::vector<int> i;
@@ -305,19 +305,19 @@ int main(void)
 		i[1] = 20;
 		std::vector<int>::reverse_iterator it = i.rbegin();
 		std::vector<int>::reverse_iterator ite = i.rend();
-		std::advance(it, 1);
+		// std::advance(it, 1);
 	}
 
-	{
-		std::map<char,int> m,bar;
+// 	{
+// 		std::map<char,int> m,bar;
 
-		m['x']=100;
-		m['y']=200;
+// 		m['x']=100;
+// 		m['y']=200;
 
-		bar['a']=11;
-		bar['b']=22;
-		bar['c']=33;
-		std::map<char,int>::const_iterator cit = m.begin();
-		std::advance(cit, 5);	
-	}
+// 		bar['a']=11;
+// 		bar['b']=22;
+// 		bar['c']=33;
+// 		std::map<char,int>::const_iterator cit = m.begin();
+// 		// std::advance(cit, 5);	
+// 	}
 }

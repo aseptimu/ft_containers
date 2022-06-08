@@ -6,7 +6,7 @@
 /*   By: aseptimu <aseptimu@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 16:38:49 by aseptimu          #+#    #+#             */
-/*   Updated: 2022/06/07 18:40:02 by aseptimu         ###   ########.fr       */
+/*   Updated: 2022/06/08 12:33:06 by aseptimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,7 +163,7 @@ public:
 	{ return tree.key_comp(); }
 
 	value_compare	value_comp() const
-	{ return value_compare(tree.key_comp); }
+	{ return value_compare(tree.key_comp()); }
 
 	iterator	find(const key_type& key)
 	{ return tree.find(key); }

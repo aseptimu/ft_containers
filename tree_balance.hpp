@@ -136,7 +136,7 @@ namespace ft
 		Node<Val> *		tmp = 0;
 		Node<Val> *		tmp_parent = 0;
 
-		if (cpy->_left == 0) // save child (if it's alone of none)
+		if (cpy->_left == 0) // save child (if it's alone or none)
 			tmp = cpy->_right;
 		else
 		{

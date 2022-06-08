@@ -1,8 +1,8 @@
 #include <iostream>
 #include "utils.hpp"
 #include "iterator.hpp"
-// #include "stack.hpp"
-// #include "vector.hpp"
+#include "stack.hpp"
+#include "vector.hpp"
 #include <stack>
 #include <vector>
 #include <map>
@@ -248,5 +248,76 @@ int main(void)
 		std::cout << "bar contains:\n";
 		for (ft::map<char,int>::iterator it=bar.begin(); it!=bar.end(); ++it)
 			std::cout << it->first << " => " << it->second << '\n';
+	}
+
+	{
+		ft::map<char,int> m,bar;
+
+		m['x']=100;
+		m['y']=200;
+
+		bar['a']=11;
+		bar['b']=22;
+		bar['c']=33;
+        ft::map<char, int>::reverse_iterator it = m.rbegin();
+        ft::map<char, int>::reverse_iterator it2 = m.rend();
+        ft::map<char, int>::const_reverse_iterator cit = m.rbegin();
+        ft::map<char, int>::const_reverse_iterator cit2 = m.rend();
+		if (it == cit2)
+			std::cout << "good";
+		std::advance(it, 1);
+		ft::iterator_traits<ft::map<char, int>::reverse_iterator>::difference_type i;
+		std::iterator_traits<std::map<char, int>::reverse_iterator>::difference_type j;
+		std::iterator_traits<ft::map<char, int>::reverse_iterator>::difference_type k;
+		ft::map<char, int>::reverse_iterator::difference_type ll;
+		ft::map<char, int>::reverse_iterator::iterator_category l;
+	}
+
+	{
+		std::map<char,int> m,bar;
+
+		m['x']=100;
+		m['y']=200;
+
+		bar['a']=11;
+		bar['b']=22;
+		bar['c']=33;
+        std::map<char, int>::reverse_iterator it = m.rbegin();
+        std::map<char, int>::reverse_iterator it2 = m.rend();
+        std::map<char, int>::const_reverse_iterator cit = m.rbegin();
+        std::map<char, int>::const_reverse_iterator cit2 = m.rend();
+		if (it == cit2)
+			std::cout << "good";
+		std::advance(it, 1);
+	}
+
+	{
+		ft::vector<int> i;
+		i[0] = 10;
+		i[1] = 20;
+		ft::vector<int>::reverse_iterator it = i.rbegin();
+		ft::vector<int>::reverse_iterator ite = i.rend();
+		std::advance(it, 1);
+	}
+	{
+		std::vector<int> i;
+		i[0] = 10;
+		i[1] = 20;
+		std::vector<int>::reverse_iterator it = i.rbegin();
+		std::vector<int>::reverse_iterator ite = i.rend();
+		std::advance(it, 1);
+	}
+
+	{
+		std::map<char,int> m,bar;
+
+		m['x']=100;
+		m['y']=200;
+
+		bar['a']=11;
+		bar['b']=22;
+		bar['c']=33;
+		std::map<char,int>::const_iterator cit = m.begin();
+		std::advance(cit, 5);	
 	}
 }

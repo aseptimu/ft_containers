@@ -152,13 +152,13 @@ const Node<T>*	decrement(const Node<T>* _node)
 template < class T >
 struct TreeIterator
 {
-	typedef T							value_type;
-	typedef T&							reference;
-	typedef T*							pointer;
-	typedef bidirectional_iterator_tag	iterator_category;
-	typedef ptrdiff_t					difference_type;
-	typedef Node<T>*					_link;
-	typedef TreeIterator<T>				iterator;
+	typedef T								value_type;
+	typedef T&								reference;
+	typedef T*								pointer;
+	typedef std::bidirectional_iterator_tag	iterator_category;
+	typedef ptrdiff_t						difference_type;
+	typedef Node<T>*						_link;
+	typedef TreeIterator<T>					iterator;
 
 	_link	_node;
 	TreeIterator() { _node = NULL; }
@@ -209,7 +209,7 @@ struct TreeConstIterator//TODO:Проверить!
 	typedef const T*						pointer;
 	typedef TreeIterator<T>					iterator;
 	typedef	TreeConstIterator<T>			const_iterator;
-	typedef bidirectional_iterator_tag		iterator_category;
+	typedef std::bidirectional_iterator_tag		iterator_category;
 	typedef ptrdiff_t						difference_type;
 	typedef typename Node<T>::_link			_link;
 	typedef typename Node<T>::_Const_link	_const_link;
@@ -335,7 +335,7 @@ public: // TODO: delete!!!
 		_Key_comp	_key_compare;
 
 		_tree_impl() : _node_allocator() { }
-		_tree_impl(const _tree_impl& _x) : _node_allocator(), _key_compare(_x._key_compare), NodeHeader<Val>()  {}
+		_tree_impl(const _tree_impl& _x) : NodeHeader<Val>(), _node_allocator(), _key_compare(_x._key_compare)  {}
 		_tree_impl(const _Key_comp& _comp, const _node_allocator& _a) : _node_allocator(_a), _key_compare(_comp) { }
 	};
 
@@ -604,7 +604,7 @@ template < typename NodeGen >
 typename Tree<Key, Val, KeyOfValue, Comp, Alloc>::iterator	Tree<Key, Val, KeyOfValue, Comp, Alloc>::_insert_in_tree(_link node, _link parent, const value_type& val, NodeGen& gen)
 {
 	bool	insert_left = (node != 0 || parent == _tree_end() || _impl._key_compare(KeyOfValue()(val), _node_key(parent)));
-	_link	n = _create_node(val);
+	_link	n = gen(val);
 
 	tree_insert_and_rebalance(insert_left, n, parent, _impl._header);
 	++_impl._nodeCount;
@@ -791,7 +791,7 @@ template < typename Key, typename Val, typename KeyOfValue, typename Comp, typen
 ft::pair<typename Tree<Key, Val, KeyOfValue, Comp, Alloc>::const_iterator, typename Tree<Key, Val, KeyOfValue, Comp, Alloc>::const_iterator>
 Tree<Key, Val, KeyOfValue, Comp, Alloc>::equal_range(const key_type& key) const //TODO: ЭТО ТОЖЕ ПРОВЕРИТЬ! В оригинале больше
 {
-	return pair<iterator, iterator>(lower_bound(key), upper_bound(key));
+	return pair<const_iterator, const_iterator>(lower_bound(key), upper_bound(key));
 }
 
 template < typename Key, typename Val, typename KeyOfValue, typename Comp, typename Alloc >

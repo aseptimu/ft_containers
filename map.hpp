@@ -6,7 +6,7 @@
 /*   By: aseptimu <aseptimu@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 16:38:49 by aseptimu          #+#    #+#             */
-/*   Updated: 2022/06/08 17:42:19 by aseptimu         ###   ########.fr       */
+/*   Updated: 2022/06/08 18:13:58 by aseptimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,6 @@ public:
 	template<typename InputIterator>
 	map(InputIterator first, InputIterator last, const Compare& comp, const allocator_type& a = allocator_type()) : tree(comp, Alloc(a))
 	{ tree._insert_range(first, last); }
-	// ~map();
 
 	map& operator=(const map& assign)
 	{

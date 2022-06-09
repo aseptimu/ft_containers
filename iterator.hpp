@@ -2,7 +2,7 @@
 # define ITERATOR_HPP
 
 #include <cstddef>
-#include <iterator> // TODO: одумайся!
+#include <iterator>
 
 namespace ft
 {
@@ -182,35 +182,6 @@ public:
 	pointer operator->() const { return &(operator*()); }
 	reference operator[] (difference_type n) const { return (*(_iter - n - 1)); }
 
-	// template <class It>
-	// friend bool operator== (const reverse_iterator<It>& lhs,
-	// 				const reverse_iterator<It>& rhs);
-	// template <class It>
-	// friend bool operator!= (const reverse_iterator<It>& lhs,
-	// 				const reverse_iterator<It>& rhs);
-	// template <class It>
-	// friend bool operator<  (const reverse_iterator<It>& lhs,
-	// 				const reverse_iterator<It>& rhs);
-	// template <class It>
-	// friend bool operator<= (const reverse_iterator<It>& lhs,
-	// 				const reverse_iterator<It>& rhs);
-	// template <class It>
-	// friend bool operator>  (const reverse_iterator<It>& lhs,
-	// 				const reverse_iterator<It>& rhs);
-	// template <class It>
-	// friend bool operator>= (const reverse_iterator<It>& lhs,
-	// 				const reverse_iterator<It>& rhs);
-
-	// template <class It>
-	// friend reverse_iterator<It> operator+ (
-	// 			typename reverse_iterator<It>::difference_type n,
-	// 			const reverse_iterator<It>& rev_it);
-	
-	// template <class It>
-	// friend typename reverse_iterator<It>::difference_type operator- (
-	// 	const reverse_iterator<It>& lhs,
-	// 	const reverse_iterator<It>& rhs);
-
 private:
 	iterator_type	_iter;
 };
@@ -294,7 +265,7 @@ private:
 	}
 
 	template <class It>
-	typename ft::iterator_traits<It>::differenct_type	do_distance(It first, It last, std::input_iterator_tag)
+	typename ft::iterator_traits<It>::difference_type	do_distance(It first, It last, std::input_iterator_tag)
 	{
 		typename ft::iterator_traits<It>::difference_type result = 0;
 		while (first != last) {

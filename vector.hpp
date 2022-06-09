@@ -6,7 +6,7 @@
 /*   By: aseptimu <aseptimu@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 16:38:20 by aseptimu          #+#    #+#             */
-/*   Updated: 2022/05/23 16:25:45 by aseptimu         ###   ########.fr       */
+/*   Updated: 2022/06/09 18:02:32 by aseptimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 # include "iterator.hpp"
 # include "utils.hpp"
 # include <limits>
-# include <iostream> // TODO: delete
+
 
 namespace ft
 {
@@ -99,26 +99,6 @@ public:
 	iterator	erase (iterator first, iterator last);
 	void		swap (vector& x);
 	void		clear();
-
-	// Operators
-
-	// template <class T, class Alloc>
-	// friend bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
-
-	// template <class T, class Alloc>
-	// friend bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
-
-	// template <class T, class Alloc>
-	// friend bool operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
-
-	// template <class T, class Alloc>
-	// friend bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
-
-	// template <class T, class Alloc>
-	// friend bool operator>  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
-
-	// template <class T, class Alloc>
-	// friend bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
 	
 
 private:
@@ -480,7 +460,7 @@ void	vector< T, Allocator >::assign (typename ft::enable_if<ft::is_iterator<Inpu
 }
 
 template < class T, class Allocator >
-void	vector< T, Allocator >::assign (size_type n, const value_type& val)
+void	vector< T, Allocator >::assign(size_type n, const value_type& val)
 {
 	size_type	i;
 
@@ -514,7 +494,7 @@ void	vector< T, Allocator >::assign (size_type n, const value_type& val)
 		{
 			try
 			{
-				_alloc.construct(_data + i);
+				_alloc.construct(_data + i, val);
 			}
 			catch(...)
 			{
@@ -568,7 +548,7 @@ void		vector< T, Allocator >::push_back (const value_type& val)
 template < class T, class Allocator >
 void		vector< T, Allocator >::pop_back()
 {
-	_alloc.destroy(_data + _size - 1); //TODO: проверить
+	_alloc.destroy(_data + _size - 1);
 	_size--;
 }
 

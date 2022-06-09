@@ -50,15 +50,16 @@ template <class T>
 struct is_integral : public _is_integrall<typename _remove_const<T>::type> { };
 
 /* is_iterator */
-template <class _Iter>
+template<typename T, typename = void>
 struct is_iterator
 {
-private:
-	struct _two{char _trash; char _trashh;};
-	template <class _It> static _two _test(...);
-	template <class _It> static char _test(typename _It::iterator_category* = 0);
-public:
-	static const bool	value = sizeof(_test<_Iter>(0)) == 1;
+   static const bool value = false;
+};
+
+template<typename T>
+struct is_iterator<T, typename std::enable_if<!std::is_same<typename std::iterator_traits<T>::value_type, void>::value>::type>
+{
+   static const bool value = true;
 };
 
 /* other */

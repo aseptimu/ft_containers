@@ -816,7 +816,7 @@ typename vector< T, Alloc >::iterator	vector< T, Alloc >::erase (typename vector
 template < class T, class Alloc >
 void	vector< T, Alloc >::swap( vector& x )
 {
-		if (x == *this)
+		if (&x == this)
 			return;
 		size_type		tmp_size = x._size;
 		size_type		tmp_cap = x._cap;

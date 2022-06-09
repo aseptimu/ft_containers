@@ -2,6 +2,7 @@
 #include "vector.hpp"
 #include <stack>
 #include <iostream>
+#include <typeinfo>
 #include <vector>
 #include "iterator.hpp"
 

@@ -80,12 +80,12 @@ public:
 
 	pointer base() const { return (_ptr); }
 
-	bool	operator==(const random_access_iterator& it) const {
-		return (*_ptr == *(it._ptr));
+	friend bool	operator==(const random_access_iterator lhs, const random_access_iterator rhs) {
+		return (lhs.base() == rhs.base());
 	}
 
-	bool	operator!=(const random_access_iterator& it) const {
-		return (*_ptr != *(it._ptr));
+	friend bool	operator!=(const random_access_iterator lhs, const random_access_iterator rhs) {
+		return (lhs.base() != rhs.base());
 	}
 
 	reference	operator*(void) const {
@@ -141,7 +141,7 @@ public:
 	}
 
 
-private:
+
 	pointer _ptr;
 };
 	template <typename Tl>
@@ -150,6 +150,95 @@ private:
 			const ft::random_access_iterator<Tl> rhs) {	return (lhs.base() - rhs.base()); }
 
 
+template <class T>
+class const_random_access_iterator
+{
+public:
+	typedef typename iterator<random_access_iterator_tag, T>::value_type		value_type;
+	typedef typename iterator<random_access_iterator_tag, T>::difference_type	difference_type;
+	typedef typename iterator<random_access_iterator_tag, T>::reference			reference;
+	typedef typename iterator<std::random_access_iterator_tag, T>::iterator_category	iterator_category; //TODO: костыль для теста
+	typedef typename iterator<random_access_iterator_tag, T>::pointer			pointer;
+	typedef	T*																	iterator_type; // TODO: костыль для теста
+	typedef random_access_iterator<T>											iterator;
+
+	const_random_access_iterator() : _ptr(NULL) { }
+	const_random_access_iterator(pointer copy) : _ptr(copy) { }
+	const_random_access_iterator(const const_random_access_iterator& copy) : _ptr(copy._ptr) { }
+	const_random_access_iterator(const iterator& it) : _ptr(it._ptr) { }
+	const_random_access_iterator& operator= (const const_random_access_iterator& assign) {
+		if (this == &assign)
+			return (*this);
+		_ptr = assign._ptr;
+		return (*this);
+	}
+
+	pointer base() const { return (_ptr); }
+
+	friend bool	operator==(const const_random_access_iterator lhs, const const_random_access_iterator rhs) {
+		return (lhs.base() == rhs.base());
+	}
+
+	friend bool	operator!=(const const_random_access_iterator lhs, const const_random_access_iterator rhs) {
+		return (lhs.base() != rhs.base());
+	}
+
+	reference	operator*(void) const {
+		return (*_ptr);
+	}
+	
+	pointer	operator->(void) const {
+		return (_ptr);
+	}
+
+	const_random_access_iterator&	operator++ (void) {
+		_ptr++;
+		return (*this);
+	}
+
+	const_random_access_iterator	operator++ (int) {
+		const_random_access_iterator tmp = *this;
+		_ptr++;
+		return (tmp);
+	}
+
+	const_random_access_iterator&	operator-- (void) {
+		_ptr--;
+		return (*this);
+	}
+
+	const_random_access_iterator	operator-- (int) {
+		const_random_access_iterator tmp = *this;
+		_ptr--;
+		return (tmp);
+	}
+
+	const_random_access_iterator operator+ (difference_type n) const {
+		return (_ptr + n);
+	}
+
+	const_random_access_iterator operator- (difference_type n) const {
+		return (_ptr - n);
+	}
+
+	const_random_access_iterator& operator+= (difference_type n) {
+		_ptr += n;
+		return (*this);
+	}
+
+	const_random_access_iterator& operator-= (difference_type n) {
+		_ptr -= n;
+		return (*this);
+	}
+
+	reference	operator[](difference_type n) {
+		return (*(_ptr + n));
+	}
+
+
+private:
+	pointer _ptr;
+};
 
 template <class Iterator>
 class reverse_iterator
@@ -164,8 +253,8 @@ public:
 
 	reverse_iterator() : _iter() {}
 	explicit reverse_iterator (iterator_type it) : _iter(it) {}
-	template <class Iter>
-		reverse_iterator (const reverse_iterator<Iter>& rev_it) : _iter(rev_it.base()) {}
+	reverse_iterator (const reverse_iterator& rev_it) : _iter(rev_it._iter) {}
+	~reverse_iterator() {}
 
 	
 	iterator_type base() const { return (_iter); }
@@ -181,16 +270,16 @@ public:
 	pointer operator->() const { return &(operator*()); }
 	reference operator[] (difference_type n) const { return (*(_iter - n - 1)); }
 
+	friend	bool operator==(reverse_iterator lhs, reverse_iterator rhs)
+	{ return lhs._iter == rhs._iter; }
+	
+	friend	bool operator!=(reverse_iterator lhs, reverse_iterator rhs)
+	{ return lhs._iter != rhs._iter; }
+
 private:
 	iterator_type	_iter;
 };
 
-	template <class Iterator, class Iterator1>
-	bool operator== (const reverse_iterator<Iterator>& lhs,
-					const reverse_iterator<Iterator1>& rhs) { return (lhs.base() == rhs.base()); }
-	template <class Iterator, class Iterator1>
-	bool operator!= (const reverse_iterator<Iterator>& lhs,
-					const reverse_iterator<Iterator1>& rhs) { return (lhs.base() != rhs.base()); }
 	template <class Iterator, class Iterator1>
 	bool operator<  (const reverse_iterator<Iterator>& lhs,
 					const reverse_iterator<Iterator1>& rhs) { return lhs.base() < rhs.base(); }

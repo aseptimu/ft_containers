@@ -6,7 +6,7 @@
 /*   By: aseptimu <aseptimu@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 16:38:20 by aseptimu          #+#    #+#             */
-/*   Updated: 2022/06/10 13:06:04 by aseptimu         ###   ########.fr       */
+/*   Updated: 2022/06/10 17:09:59 by aseptimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ public:
 	typedef	std::size_t												size_type;
 	typedef std::ptrdiff_t											difference_type;
 	typedef typename ft::random_access_iterator<value_type>			iterator;
-	typedef typename ft::random_access_iterator<const value_type>	const_iterator;
+	typedef typename ft::const_random_access_iterator<value_type>	const_iterator;
 	typedef typename ft::reverse_iterator<iterator>					reverse_iterator;
 	typedef typename ft::reverse_iterator<const iterator>			const_reverse_iterator;
 	

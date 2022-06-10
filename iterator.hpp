@@ -71,7 +71,6 @@ public:
 	random_access_iterator() : _ptr(NULL) { }
 	random_access_iterator(pointer copy) : _ptr(copy) { }
 	random_access_iterator(const random_access_iterator& copy) : _ptr(copy._ptr) { }
-	~random_access_iterator() { }
 	random_access_iterator& operator= (const random_access_iterator& assign) {
 		if (this == &assign)
 			return (*this);

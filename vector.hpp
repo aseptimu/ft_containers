@@ -6,7 +6,7 @@
 /*   By: aseptimu <aseptimu@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 16:38:20 by aseptimu          #+#    #+#             */
-/*   Updated: 2022/06/10 17:09:59 by aseptimu         ###   ########.fr       */
+/*   Updated: 2022/06/10 19:59:14 by aseptimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -641,13 +641,13 @@ void		vector< T, Alloc >::insert (vector< T, Alloc >::iterator position, size_ty
 	{
 		try
 		{
-			for (i = _size; i > dist; i++)
+			for (i = _size; i > dist; i--) // TODO: было i++
 			{
-				_alloc.construct(_data + i + n, *(_data + i));
-				_alloc.destroy(_data + i);
+				_alloc.construct(_data + i + n - 1, *(_data + i - 1));
+				_alloc.destroy(_data + i - 1);
 			}
-			for (size_type j = n; j > 0; j--)
-				_alloc.construct(_data + j, val);
+			for (size_type j = dist + n; j > dist; j--)
+				_alloc.construct(_data + j - 1, val);
 		}
 		catch(...)
 		{
@@ -704,13 +704,13 @@ void	vector< T, Alloc >::insert (vector< T, Alloc >::iterator position, typename
 	{
 		try
 		{
-			for (i = _size; i > beg; i++)
+			for (i = _size; i > beg; i--)
 			{
-				_alloc.construct(_data + i + dist, *(_data + i));
-				_alloc.destroy(_data + i);
+				_alloc.construct(_data + i + dist - 1, *(_data + i - 1));
+				_alloc.destroy(_data + i - 1);
 			}
-			for (size_type j = dist; j > 0; j--, last--)
-				_alloc.construct(_data + j, *last);
+			for (size_type j = beg + dist; j > beg; j--, last--)
+				_alloc.construct(_data + j - 1, *(last - 1));
 		}
 		catch(...)
 		{

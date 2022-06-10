@@ -80,13 +80,6 @@ public:
 
 	pointer base() const { return (_ptr); }
 
-	friend bool	operator==(const random_access_iterator lhs, const random_access_iterator rhs) {
-		return (lhs.base() == rhs.base());
-	}
-
-	friend bool	operator!=(const random_access_iterator lhs, const random_access_iterator rhs) {
-		return (lhs.base() != rhs.base());
-	}
 
 	reference	operator*(void) const {
 		return (*_ptr);
@@ -140,7 +133,29 @@ public:
 		return (*(_ptr + n));
 	}
 
+	friend bool	operator==(const random_access_iterator lhs, const random_access_iterator rhs) {
+		return (lhs.base() == rhs.base());
+	}
 
+	friend bool	operator!=(const random_access_iterator lhs, const random_access_iterator rhs) {
+		return (lhs.base() != rhs.base());
+	}
+
+	friend bool	operator<(const random_access_iterator lhs, const random_access_iterator rhs) {
+		return (lhs.base() < rhs.base());
+	}
+
+	friend bool	operator>(const random_access_iterator lhs, const random_access_iterator rhs) {
+		return (lhs.base() > rhs.base());
+	}
+
+	friend bool	operator<=(const random_access_iterator lhs, const random_access_iterator rhs) {
+		return (lhs.base() <= rhs.base());
+	}
+
+	friend bool	operator>=(const random_access_iterator lhs, const random_access_iterator rhs) {
+		return (lhs.base() >= rhs.base());
+	}
 
 	pointer _ptr;
 };
@@ -174,14 +189,6 @@ public:
 	}
 
 	pointer base() const { return (_ptr); }
-
-	friend bool	operator==(const const_random_access_iterator lhs, const const_random_access_iterator rhs) {
-		return (lhs.base() == rhs.base());
-	}
-
-	friend bool	operator!=(const const_random_access_iterator lhs, const const_random_access_iterator rhs) {
-		return (lhs.base() != rhs.base());
-	}
 
 	reference	operator*(void) const {
 		return (*_ptr);
@@ -233,6 +240,30 @@ public:
 
 	reference	operator[](difference_type n) {
 		return (*(_ptr + n));
+	}
+
+	friend bool	operator==(const const_random_access_iterator lhs, const const_random_access_iterator rhs) {
+		return (lhs.base() == rhs.base());
+	}
+
+	friend bool	operator!=(const const_random_access_iterator lhs, const const_random_access_iterator rhs) {
+		return (lhs.base() != rhs.base());
+	}
+
+	friend bool	operator<(const const_random_access_iterator lhs, const const_random_access_iterator rhs) {
+		return (lhs.base() < rhs.base());
+	}
+
+	friend bool	operator>(const const_random_access_iterator lhs, const const_random_access_iterator rhs) {
+		return (lhs.base() > rhs.base());
+	}
+
+	friend bool	operator<=(const const_random_access_iterator lhs, const const_random_access_iterator rhs) {
+		return (lhs.base() <= rhs.base());
+	}
+
+	friend bool	operator>=(const const_random_access_iterator lhs, const const_random_access_iterator rhs) {
+		return (lhs.base() >= rhs.base());
 	}
 
 

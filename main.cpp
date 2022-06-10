@@ -556,9 +556,28 @@ int main()
 		ii.assign(b_string, b_string + 2);
 		jj.assign(b_string, b_string + 2);
 		jj.begin();
-
+		std::vector<std::string>::iterator it = ii.begin();
+		2 + it;
 	}
 
+
+	{
+		std::cout << std::endl;
+		ft::vector<std::string> i;
+		i.assign(0, "");
+	}
+	
+
+	{
+		std::cout << std::endl;
+		std::vector<std::string> i;
+		i.assign(0, "");
+	}
+
+	{
+		ft::vector<int> i;
+		i.assign(1000, 1);
+	}
 	// }
 	return 0;
 }

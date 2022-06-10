@@ -6,7 +6,7 @@
 /*   By: aseptimu <aseptimu@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 16:38:20 by aseptimu          #+#    #+#             */
-/*   Updated: 2022/06/09 18:02:32 by aseptimu         ###   ########.fr       */
+/*   Updated: 2022/06/10 13:06:04 by aseptimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -415,7 +415,7 @@ typename vector< T, Allocator >::const_reference	vector< T, Allocator >::back() 
 // Modifiers
 template < class T, class Allocator >
 template <class InputIterator>
-void	vector< T, Allocator >::assign (typename ft::enable_if<ft::is_iterator<InputIterator>::value, InputIterator>::type first, InputIterator last)
+void	vector< T, Allocator >::assign (typename enable_if<is_iterator<InputIterator>::value, InputIterator>::type first, InputIterator last)
 {
 	size_type	d = ft::distance(first, last);
 	size_type	i;

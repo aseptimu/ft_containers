@@ -32,10 +32,10 @@ int main(void)
 
   // the iterator constructor can also be used to construct from arrays:
 	int myints[] = {16,2,77,29};
-	std::vector<int> fifth (myints, myints + sizeof(myints) / sizeof(int) );
+	ft::vector<int> fifth (myints, myints + sizeof(myints) / sizeof(int) );
 
 	std::cout << "The contents of fifth are:";
-	for (std::vector<int>::iterator it = fifth.begin(); it != fifth.end(); ++it)
+	for (ft::vector<int>::iterator it = fifth.begin(); it != fifth.end(); ++it)
 		std::cout << ' ' << *it;
 	std::cout << '\n';
 }

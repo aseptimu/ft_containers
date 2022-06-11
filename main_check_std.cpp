@@ -1,13 +1,13 @@
 #include <iostream>
-#include "vector.hpp"
+// #include "vector.hpp"
 #include <vector>
-#include "stack.hpp"
+// #include "stack.hpp"
 #include <stack>
-#include "map.hpp"
+// #include "map.hpp"
 #include <map>
-#include "set.hpp"
+// #include "set.hpp"
 #include <set>
-
+	namespace ft = std;
 int main(void)
 {
 

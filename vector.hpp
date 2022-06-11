@@ -6,7 +6,7 @@
 /*   By: aseptimu <aseptimu@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 16:38:20 by aseptimu          #+#    #+#             */
-/*   Updated: 2022/06/10 19:59:14 by aseptimu         ###   ########.fr       */
+/*   Updated: 2022/06/11 10:58:26 by aseptimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,7 @@ public:
 	void		swap (vector& x);
 	void		clear();
 	
+	allocator_type get_allocator() const;
 
 private:
 	size_type	_size;
@@ -842,6 +843,11 @@ void	vector< T, Alloc >::clear()
 	_size = 0;
 }
 
+template < class T, class Alloc >
+typename vector< T, Alloc >::allocator_type vector< T, Alloc >::get_allocator() const
+{
+	return (_alloc);
+}
 
 // Operators
 

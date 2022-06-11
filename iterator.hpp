@@ -285,6 +285,8 @@ public:
 	reverse_iterator() : _iter() {}
 	explicit reverse_iterator (iterator_type it) : _iter(it) {}
 	reverse_iterator (const reverse_iterator& rev_it) : _iter(rev_it._iter) {}
+	template <class Iter>
+		reverse_iterator (const reverse_iterator<Iter>& rev_it) : _iter(rev_it.base()) {}
 	~reverse_iterator() {}
 
 	
@@ -301,16 +303,16 @@ public:
 	pointer operator->() const { return &(operator*()); }
 	reference operator[] (difference_type n) const { return (*(_iter - n - 1)); }
 
-	friend	bool operator==(reverse_iterator lhs, reverse_iterator rhs)
-	{ return lhs._iter == rhs._iter; }
-	
-	friend	bool operator!=(reverse_iterator lhs, reverse_iterator rhs)
-	{ return lhs._iter != rhs._iter; }
-
 private:
 	iterator_type	_iter;
 };
 
+	template <class Iterator, class Iterator1>
+	bool operator== (const reverse_iterator<Iterator>& lhs,
+					const reverse_iterator<Iterator1>& rhs) { return (lhs.base() == rhs.base()); }
+	template <class Iterator, class Iterator1>
+	bool operator!= (const reverse_iterator<Iterator>& lhs,
+					const reverse_iterator<Iterator1>& rhs) { return (lhs.base() != rhs.base()); }
 	template <class Iterator, class Iterator1>
 	bool operator<  (const reverse_iterator<Iterator>& lhs,
 					const reverse_iterator<Iterator1>& rhs) { return lhs.base() < rhs.base(); }

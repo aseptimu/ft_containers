@@ -1,9 +1,0 @@
-ft_containers-unit-test
-*.o
-*.d
-*.dSYM
-*.DS_Store
-tol/
-.vscode
-main2.cpp
-a.out

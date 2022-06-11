@@ -6,7 +6,7 @@
 /*   By: aseptimu <aseptimu@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 16:38:49 by aseptimu          #+#    #+#             */
-/*   Updated: 2022/06/11 12:45:11 by aseptimu         ###   ########.fr       */
+/*   Updated: 2022/06/11 14:17:26 by aseptimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,7 @@ public:
 public:
 	class value_compare : public std::binary_function<value_type, value_type, bool>
 	{
-		friend class map<Key, T, Compare, Alloc>;
-		protected:
+		public:
 		Compare	comp;
 		
 		value_compare(Compare c) : comp(c) { }

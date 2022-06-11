@@ -159,10 +159,15 @@ public:
 
 	pointer _ptr;
 };
-	template <typename Tl>
-	typename ft::random_access_iterator<Tl>::difference_type
-	operator-(const ft::random_access_iterator<Tl> lhs,
-			const ft::random_access_iterator<Tl> rhs) {	return (lhs.base() - rhs.base()); }
+template <class T>
+random_access_iterator<T>	operator+ (
+			typename random_access_iterator<T>::difference_type n,
+			const random_access_iterator<T>& rev_it) { return random_access_iterator<T>(rev_it.base() + n); }
+
+template <typename Tl>
+typename ft::random_access_iterator<Tl>::difference_type
+operator-(const ft::random_access_iterator<Tl> lhs,
+		const ft::random_access_iterator<Tl> rhs) {	return (lhs.base() - rhs.base()); }
 
 
 template <class T>
@@ -270,6 +275,14 @@ public:
 private:
 	pointer _ptr;
 };
+template <class T>
+const_random_access_iterator<T>	operator+ (
+			typename const_random_access_iterator<T>::difference_type n,
+			const const_random_access_iterator<T>& rev_it) { return const_random_access_iterator<T>(rev_it.base() + n); }
+template <typename Tl>
+typename ft::const_random_access_iterator<Tl>::difference_type
+operator-(const ft::const_random_access_iterator<Tl> lhs,
+		const ft::const_random_access_iterator<Tl> rhs) {	return (lhs.base() - rhs.base()); }
 
 template <class Iterator>
 class reverse_iterator
@@ -334,7 +347,7 @@ private:
 	template <class Iterator>
 	typename reverse_iterator<Iterator>::difference_type	operator- (
 		const reverse_iterator<Iterator>& lhs,
-		const reverse_iterator<Iterator>& rhs) { return rhs.base() - lhs.base(); } // TODO: уточнить порядок вычитания!!
+		const reverse_iterator<Iterator>& rhs) { return rhs.base() - lhs.base(); }
 
 	template<class It>
 	void	do_advance(It& it, typename ft::iterator_traits<It>::difference_type n,

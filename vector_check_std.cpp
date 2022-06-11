@@ -1,13 +1,7 @@
 #include <iostream>
-// #include "vector.hpp"
 #include <vector>
-// #include "stack.hpp"
-#include <stack>
-// #include "map.hpp"
-#include <map>
-// #include "set.hpp"
-#include <set>
-	namespace ft = std;
+
+namespace ft = std;
 int main(void)
 {
 
@@ -458,14 +452,25 @@ int main(void)
 		if (foo>=bar) std::cout << "foo is greater than or equal to bar\n";
 	}
 
-	// SWAP //TODO: здесь продемонстрировать работу swap
+	// SWAP
 	{
 		std::cout << std::endl;
 		unsigned int i;
 		std::vector<int> foo (3,100);   // three ints with a value of 100
 		std::vector<int> bar (5,200);   // five ints with a value of 200
 
-		ft::swap(foo, bar);
+		std::vector<int>::iterator it = foo.begin();
+		std::vector<int>::pointer ptr = &bar[1];
+		std::vector<int>::reference ref = bar[1];
+		std::cout <<  "iterator before swap: " << *it << std::endl;
+		std::cout <<  "pointer before swap: " << *ptr << std::endl;
+		std::cout <<  "reference before swap: " << ref << std::endl << "\n";
+
+		foo.swap(bar);
+
+		std::cout << "iterator after swap: " << *it << std::endl;
+		std::cout <<  "pointer after swap: " << *ptr << std::endl;
+		std::cout <<  "reference after swap: " << ref << std::endl << "\n";
 
 		std::cout << "foo contains:";
 		for (std::vector<int>::iterator it = foo.begin(); it!=foo.end(); ++it)

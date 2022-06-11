@@ -6,7 +6,7 @@
 /*   By: aseptimu <aseptimu@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 16:38:20 by aseptimu          #+#    #+#             */
-/*   Updated: 2022/06/11 10:58:26 by aseptimu         ###   ########.fr       */
+/*   Updated: 2022/06/11 11:32:31 by aseptimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -376,7 +376,7 @@ typename vector< T, Allocator >::const_reference	vector< T, Allocator >::operato
 template < class T, class Allocator >
 typename vector< T, Allocator >::reference		vector< T, Allocator >::at (size_type n)
 {
-	if (n > _size)
+	if (n >= _size)
 		throw std::out_of_range("vector");
 	return *(_data + n);
 }
@@ -384,7 +384,7 @@ typename vector< T, Allocator >::reference		vector< T, Allocator >::at (size_typ
 template < class T, class Allocator >
 typename vector< T, Allocator >::const_reference	vector< T, Allocator >::at (size_type n) const
 {
-	if (n > _size)
+	if (n >= _size)
 		throw std::out_of_range("vector");
 	return *(_data + n);
 }
